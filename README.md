@@ -78,12 +78,11 @@
   
 ## 💡Visão do Produto
 > [!TIP]
-> Em construção🔜
-
+> Desenvolver uma aplicação web interativa e de fácil utilização, que permita aos usuários consultar e visualizar dados sobre áreas queimadas, risco de fogo e focos de calor a partir da base de dados do BDQueimadas. A plataforma deve ser acessível para diferentes perfis de usuários, proporcionando informações claras e precisas para análise ambiental, com o objetivo de apoiar a tomada de decisões e ações preventivas.
 <span id="metodologia">
   
 ## 📚Metodologia
-Em construção🔜
+Estamos utilizando o Scrum como metodologia para o desenvolvimento da aplicação, organizando o trabalho em Sprints com entregas incrementais. Definimos um Backlog do Produto com as funcionalidades necessárias, estimamos e distribuímos as tarefas entre os desenvolvedores, acompanhando o progresso por meio de reuniões diárias. Ao final de cada Sprint, revisamos e aprimoramos o projeto com base no feedback, garantindo um desenvolvimento iterativo e eficiente.
 
 <span id="tecnologias">
   
