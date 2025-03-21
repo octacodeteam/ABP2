@@ -1,4 +1,7 @@
-![gifgithubatualizado](https://github.com/user-attachments/assets/da2c22a6-1fee-4c20-8ffc-9aa337d1a9ea)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da2c22a6-1fee-4c20-8ffc-9aa337d1a9ea" alt="gifgithubatualizado">
+</p>
+
 <br>
 
   
@@ -19,7 +22,7 @@
   
 ## 📌Objetivo do Projeto
 > [!IMPORTANT]
-> Em construção🔜
+> O objetivo é desenvolver uma aplicação web que permita aos usuários consultar e visualizar de forma interativa os dados de área queimada, risco de fogo e focos de color obtidos na base de dados do BDQueimadas.
 
 > **Status do Projeto: Em Andamento🔜**
 
@@ -42,27 +45,32 @@
 
 | ID        | Descrição                                                                  |
 |-----------|----------------------------------------------------------------------------|
-| 1     | A informar futuramente                                                         |
-| 2     | A informar futuramente                                                         |
-| 3     | A informar futuramente                                                         |
-| 4     | A informar futuramente                                                         |
-| 5     | A informar futuramente                                                         |
-| 6     | A informar futuramente                                                         |
-| 7     | A informar futuramente                                                         |
-| 8     | A informar futuramente                                                         |
-| 9     | A informar futuramente                                                         |
-| 10    | A informar futuramente                                                         |
+| 1     | Focos de calor por estado                                                         |
+| 2     | Focos de calor por bioma                                                         |
+| 3     | Risco de fogo por estado                                                         |
+| 4     | Risco de fogo por bioma                                                         |
+| 5     | Área queimada por estado                                                         |
+| 6     | Área queimada por bioma                                                         |
+| 7     | Gráficos de focos de calor por estado e bioma                                                         |
+| 8     | Gráficos de risco de fogo por estado e bioma                                                         |
+| 9     | Gráficos de área queimada por estado e bioma                                                         |
+| 10    | Restringir as consultas por intervalo de tempo                                                         |
+| 11    | Permitir ao usuário responder a seguinte pergunta: quais meses o risco de fogo é maior?                                                         |
+| 12    | Permitir ao usuário responder a seguinte pergunta: o risco de fogo está associado a uma maior área queimada?                                                         |
 
 ### Requisitos Não Funcionais
 
 | ID        | Descrição                                                                  |
 |-----------|----------------------------------------------------------------------------|
-| 1    | A informar futuramente                                                         |
-| 2    | A informar futuramente                                                         |
-| 3    | A informar futuramente                                                         |
-| 4    | A informar futuramente                                                         |
-| 5    | A informar futuramente                                                         |
-| 6    | A informar futuramente                                                         |
+| 1    | Exibir os dados espaciais em mapas interativos                                                         |
+| 2    | Exibir os resultados em gráficos interativos                                                         |
+
+### Restrições do projeto
+
+| ID        | Descrição                                                                  |
+|-----------|----------------------------------------------------------------------------|
+| 1    | O sistema deve ser prototipado e validado utilizando o Figma                                                         |
+| 2    | O sistema deve seguir o catálogo de tecnologias do semestre                                                         |
 
 <br>
 
@@ -83,16 +91,19 @@ Em construção🔜
 
 | ID        | Descrição                                                                  |
 |-----------|----------------------------------------------------------------------------|
-| 1     | ****************************************************************************************************************                               |
-| 2     | ****************************************************************************************************************                               |
-| 3     | ****************************************************************************************************************                               |
-| 4     | ****************************************************************************************************************                               |
-| 5     | ****************************************************************************************************************                               |
-| 6     | ****************************************************************************************************************                               |
-| 7     | ****************************************************************************************************************                               |
-| 8     | ****************************************************************************************************************                               |
-| 9     | ****************************************************************************************************************                               |
-| 10    | ****************************************************************************************************************                               |
+| 1     | COMO cliente QUERO visualizar os focos de calor por estado PARA QUE eu possa monitorar e analisar a distribuição dos focos de incêndio em diferentes regiões.                               |
+| 2     | COMO cliente QUERO visualizar os focos de calor por bioma PARA QUE eu possa entender como os incêndios estão afetando diferentes ecossistemas.                               |
+| 3     | COMO cliente QUERO visualizar o risco de fogo por estado PARA QUE eu possa identificar áreas com maior probabilidade de incêndios e tomar medidas preventivas.                               |
+| 4     | COMO cliente QUERO visualizar o risco de fogo por bioma PARA QUE eu possa compreender quais ecossistemas estão mais vulneráveis a incêndios.                               |
+| 5     | COMO cliente QUERO visualizar a área queimada por estado PARA QUE eu possa entender a extensão dos danos causados pelo fogo em cada região.                               |
+| 6     | COMO cliente QUERO visualizar a área queimada por bioma PARA QUE eu possa entender o impacto do fogo em diferentes ecossistemas.                                |
+| 7     | COMO cliente QUERO visualizar gráficos dos focos de calor por estado e bioma PARA QUE eu possa identificar tendências de incêndios ao longo do tempo.                               |
+| 8     | COMO cliente QUERO visualizar gráficos do risco de fogo por estado e bioma PARA QUE eu possa prever áreas vulneráveis a incêndios.                               |
+| 9     | COMO cliente QUERO visualizar gráficos da área queimada por estado e bioma PARA QUE eu possa compreender o impacto dos incêndios em diferentes regiões.                               |
+| 10    | COMO cliente QUERO filtrar as consultas por período específico PARA QUE eu possa analisar os dados de acordo com minha necessidade de tempo.                               |
+| 11    | COMO cliente QUERO identificar os meses com maior risco de fogo PARA QUE eu possa me preparar para períodos críticos.                              |
+| 12    | COMO cliente QUERO verificar se o risco de fogo tem relação com a área queimada PARA QUE eu possa entender melhor a correlação entre esses fatores.                               |
+
 <br>  
 
 ## 📋Trello
@@ -115,12 +126,6 @@ https://trello.com/b/KfLBs6LO/abp-2dsm<br>
 > Estas foram as tecnologias utilizadas no desenvolvimento do projeto:
 
 <h4 align="left">
- <a href="https://www.w3schools.com/react/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt='React' target="_blank" width="50"></a>
- <a href="https://www.postgresql.org/" target="_blank"><img src="https://img.shields.io/badge/-PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=white" target="_blank"></a>
- <a href="https://www.w3schools.com/typescript" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt='Typescript' target="_blank" width="50"></a>
- <a href="https://www.w3schools.com/css/" target="_blank"><img src="https://img.shields.io/badge/-CSS-264de4?style=for-the-badge&logo=CSS3&logoColor=white" alt='CSS3' target="_blank"></a>
- <a href="https://www.figma.com" target="_blank"><img src="https://img.shields.io/badge/-Figma-%23E4405F?style=for-the-badge&logo=Figma&logoColor=white" target="_blank"></a>
- <a href="https://code.visualstudio.com" target="_blank"><img src="https://img.shields.io/badge/-Visual Studio Code-%2384CE?style=for-the-badge&logo=Visual Studio Code&logoColor=white" target="_blank"></a>
- <a href="https://trello.com" target="_blank"><img src="https://img.shields.io/badge/-Trello-0079BF?style=for-the-badge&logo=Trello&logoColor=white" target="_blank"></a>
+ <img src="https://skillicons.dev/icons?i=html,css,react,figma,vscode,js,ts,postgres,mysql,git,github&perline=14">
 </h4>
 <br>
