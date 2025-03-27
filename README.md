@@ -117,7 +117,7 @@ https://trello.com/b/KfLBs6LO/abp-2dsm<br>
 |  Gabrielle Fontes Simoni  | Product Owner | <a href="https://github.com/gabifontes"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 |  Gustavo Henrique Ferreira Hammes  | Scrum Master | <a href="https://github.com/GustavoHammes"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 |  Igor Santos Lima  | Dev Team | <a href="https://github.com/IgorSantosL"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
-|  Narayana Arlochi Santos  | Dev Team | <a href="https://github.com/narayanaarlochi"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
+|  Lucas Monteiro Correia  | Dev Team | <a href="https://github.com/lucasmonteiro14"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 <span id="tecnologias">
   
 ## 🔌**Tecnologias**
