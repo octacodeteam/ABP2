@@ -32,9 +32,9 @@
 
 | Links | Período | Status |
 |:-----:|:----------:|:---------:|
-| [Sprint 1](https://github.com/octacodeteam/ABP1/tree/sprint-1) | 24/03/2025 - 17/04/2025 | Não iniciada |
-| [Sprint 2](https://github.com/octacodeteam/ABP1/tree/sprint-2) | 22/04/2025 - 15/05/2025 | Não iniciada |  
-| [Sprint 3](https://github.com/octacodeteam/ABP1/tree/sprint-3) | 16/05/2025 - 11/06/2025 | Não iniciada | 
+| [Sprint 1](https://github.com/octacodeteam/ABP2/tree/sprint-1) | 24/03/2025 - 17/04/2025 | Iniciada |
+| [Sprint 2](https://github.com/octacodeteam/ABP2/tree/sprint-2) | 22/04/2025 - 15/05/2025 | Não iniciada |  
+| [Sprint 3](https://github.com/octacodeteam/ABP2/tree/sprint-3) | 16/05/2025 - 11/06/2025 | Não iniciada | 
 
 <span id="backlogArtefatos">
   
