@@ -90,9 +90,9 @@ Estamos utilizando o Scrum como metodologia para o desenvolvimento da aplicaçã
 
 | ID        | Descrição                                                                  |
 |-----------|----------------------------------------------------------------------------|
-| 1     | COMO cliente QUERO visualizar os focos de calor por estado PARA QUE eu possa monitorar e analisar a distribuição dos focos de incêndio em diferentes regiões.                               |
-| 2     | COMO cliente QUERO visualizar os focos de calor por bioma PARA QUE eu possa entender como os incêndios estão afetando diferentes ecossistemas.                               |
-| 3     | COMO cliente QUERO visualizar o risco de fogo por estado PARA QUE eu possa identificar áreas com maior probabilidade de incêndios e tomar medidas preventivas.                               |
+| 1 | COMO cliente QUERO visualizar os focos de calor por estado PARA QUE eu possa monitorar e analisar a distribuição dos focos de incêndio em diferentes regiões.                               |
+| 2 | COMO cliente QUERO visualizar os focos de calor por bioma PARA QUE eu possa entender como os incêndios estão afetando diferentes ecossistemas.                               |
+| 3 | COMO cliente QUERO visualizar o risco de fogo por estado PARA QUE eu possa identificar áreas com maior probabilidade de incêndios e tomar medidas preventivas.   |
 | 4     | COMO cliente QUERO visualizar o risco de fogo por bioma PARA QUE eu possa compreender quais ecossistemas estão mais vulneráveis a incêndios.                               |
 | 5     | COMO cliente QUERO visualizar a área queimada por estado PARA QUE eu possa entender a extensão dos danos causados pelo fogo em cada região.                               |
 | 6     | COMO cliente QUERO visualizar a área queimada por bioma PARA QUE eu possa entender o impacto do fogo em diferentes ecossistemas.                                |
@@ -106,8 +106,7 @@ Estamos utilizando o Scrum como metodologia para o desenvolvimento da aplicaçã
 | 14 | COMO Time Scrum QUERO criar um protótipo interativo no Figma com todas as telas e funcionalidades do site PARA QUE a equipe e stakeholders possam visualizar e validar a experiência do usuário antes do desenvolvimento.  |
 | 15 | COMO professora de banco de dados relacional QUERO realizar junções de tabelas usando SQL (INNER JOIN, LEFT JOIN, RIGHT JOIN, etc.), PARA QUE eu possa recuperar informações de múltiplas tabelas de maneira eficiente e coesa.  |
 | 16 | COMO professora de banco de dados relacional QUERO utilizar funções SQL como COUNT, SUM, AVG, MIN e MAX em agrupamentos, PARA QUE eu possa gerar relatórios e análises com cálculos agregados de maneira eficiente.   |
-| 17 | COMO professora de banco de dados relacional QUERO consultar e executar Stored Procedures para encapsular lógica de negócios diretamente no 
-banco PARA QUE eu possa obter resultados processados de forma eficiente sem precisar escrever consultas complexas manualmente.  |
+| 17 | COMO professora de banco de dados relacional QUERO consultar e executar Stored Procedures para encapsular lógica de negócios diretamente no banco PARA QUE eu possa obter resultados processados de forma eficiente sem precisar escrever consultas complexas manualmente.  |
 | 18 | COMO professora de banco de dados relacional QUERO consultar os logs e efeitos gerados pelas Triggers ao serem acionadas PARA QUE eu possa monitorar alterações automáticas no banco e garantir que as regras do site estão sendo aplicadas corretamente.  |
 
 <br>  
