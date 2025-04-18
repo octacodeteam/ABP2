@@ -86,7 +86,7 @@ Os dados foram coletados do site <a href="https://terrabrasilis.dpi.inpe.br/quei
 <br>
 
 ## Casos de uso
-
+![Casos de uso](https://github.com/user-attachments/assets/203cc1f1-8137-4d34-b24c-d54300693d11)
 
 
 ## 🎥 Apresentação do Projeto :
