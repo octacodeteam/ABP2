@@ -12,15 +12,18 @@ Na primeira sprint, foram realizados os seguintes objetivos: definição do nome
 
 ## Sprint Backlog
 
-| ID | Requisito          | Responsável | Prioridade | User Stories                                                 | Pontuação | Definition of Done                                           |
-|----|--------------------|-------------|------------|--------------------------------------------------------------|-----------|--------------------------------------------------------------|
-| 1  | 
-| 2  | 
-| 3  |
-| 4  |
-| 5  |
-| 6  |
-| 7  |
+| ID | Requisito          | Responsável | Prioridade | Pontuação |
+|----|--------------------|-------------|------------|-----------|
+| 1  | Definir estilo de filto para pesquisa | Alisson, Gabrielle, Gustavo, Igor | Baixa | 3 |
+| 2  | Criar classe de dados | Igor | Alta | 9 |
+| 3  | Definir modelo de gráfico | Alisson, Gabrielle, Gustavo, Igor | Baixa | 3 |
+| 4  | Definir layout do Banco de Dados | Igor | Altíssima | 15 | 
+| 5  | Definir estilização do site | Alisson, Gabrielle | Média | 5 |
+| 6  | Fazer diagrama UML - CASO DE USO | Gabrielle | Alta | 9 |
+| 7  | Definir informações necessárias para o site | Alisson, Gabrielle, Gustavo, Igor | Altíssima | 15 |
+| 8  | Definir Template para o site | Alisson, Gabrielle, Gustavo, Igor | Baixa | 3 |
+| 9  | Definir informações necessárias para o site | Alisson, Gabrielle, Gustavo, Igor | Baixa | 3 |
+| 10  | Definir Cor para o site | Alisson, Gabrielle, Gustavo, Igor | Média | 5 |
 
 
 
