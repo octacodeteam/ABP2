@@ -34,14 +34,13 @@ Na primeira sprint, foram realizados os seguintes objetivos: definição do nome
 
 ## Retrospectiva
 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
+* A comunicação no time precisa ser aprimorada.
+* A produtividade dos membros foi satisfatória.
+* É necessário melhorar a passagem de conhecimento entre os professores e os membros do grupo.
+* A organização da conclusão da sprint poderia ser mais eficiente.
+* A divisão das tarefas na sprint foi bem definida.
+* Enfrentamos desafios devido à saída de alguns membros do grupo.
+
   
 
 ## 🔗 Resultados :
