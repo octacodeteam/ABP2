@@ -83,6 +83,10 @@ Os dados foram coletados do site <a href="https://terrabrasilis.dpi.inpe.br/quei
 
 <br>
 
+## Casos de uso
+
+
+
 ## 🎥 Apresentação do Projeto :
 
 <a href="">Youtube</a>
