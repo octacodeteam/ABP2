@@ -74,7 +74,7 @@ Iniciamos o desenvolvimento das interfaces de frontend da aplicação, com base 
 
 ## Tratamento dos Dados
 
-Baixamos os dados do site de queimadas no formato GeoJSON, assim, utilizamos o QGIS para vetorizar e enviar os dados para o PGAdmin, criando dessa forma o banco de dados para gerar consultas e criar um mapa interativo que exibe os focos de queimada, proporcionando uma visualização geoespacial precisa dos dados.
+Os dados foram coletados do site <a href="https://terrabrasilis.dpi.inpe.br/queimadas/portal/">BD Queimadas</a> no formato GeoJSON, assim, utilizamos o QGIS para vetorizar e enviar os dados para o PGAdmin, criando dessa forma o banco de dados para gerar consultas e criar um mapa interativo que exibe os focos de queimada, proporcionando uma visualização geoespacial precisa dos dados.
 
 ![banco1](https://github.com/user-attachments/assets/dd6635ce-3021-42ce-8055-c6e6d518bb78)
 <br>
