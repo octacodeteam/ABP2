@@ -119,8 +119,7 @@ https://trello.com/b/KfLBs6LO/abp-2dsm<br>
 
 |      Nome      |    Função       |                            Github                             |
 | :--------------: | :-----------: | :----------------------------------------------------------: |
-|  Alisson Franco Gritti  | Dev Team | <a href="https://github.com/alissonfatec"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> ||
-|  Gabrielle Fontes Simoni  | Product Owner | <a href="https://github.com/gabifontes"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
+|  Alisson Franco Gritti  | Product Owner | <a href="https://github.com/alissonfatec"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 |  Gustavo Henrique Ferreira Hammes  | Scrum Master | <a href="https://github.com/GustavoHammes"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 |  Igor Santos Lima  | Dev Team | <a href="https://github.com/IgorSantosL"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a> |
 
