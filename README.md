@@ -103,11 +103,13 @@ Estamos utilizando o Scrum como metodologia para o desenvolvimento da aplicaçã
 | 11    | COMO cliente QUERO identificar os meses com maior risco de fogo PARA QUE eu possa me preparar para períodos críticos.                              |
 | 12    | COMO cliente QUERO verificar se o risco de fogo tem relação com a área queimada PARA QUE eu possa entender melhor a correlação entre esses fatores.                               |
 | 13 | COMO professor de Eng. De Software II QUERO visualizar os diagramas UML do sistema PARA QUE eu possa efetuar a estruturação do sistema.  |
-| 14 | COMO Time Scrum QUERO criar um protótipo interativo no Figma com todas as telas e funcionalidades do site PARA QUE a equipe e stakeholders possam visualizar e validar a experiência do usuário antes do desenvolvimento.  |
-| 15 | COMO professora de banco de dados relacional QUERO realizar junções de tabelas usando SQL (INNER JOIN, LEFT JOIN, RIGHT JOIN, etc.), PARA QUE eu possa recuperar informações de múltiplas tabelas de maneira eficiente e coesa.  |
-| 16 | COMO professora de banco de dados relacional QUERO utilizar funções SQL como COUNT, SUM, AVG, MIN e MAX em agrupamentos, PARA QUE eu possa gerar relatórios e análises com cálculos agregados de maneira eficiente.   |
-| 17 | COMO professora de banco de dados relacional QUERO consultar e executar Stored Procedures para encapsular lógica de negócios diretamente no banco PARA QUE eu possa obter resultados processados de forma eficiente sem precisar escrever consultas complexas manualmente.  |
-| 18 | COMO professora de banco de dados relacional QUERO consultar os logs e efeitos gerados pelas Triggers ao serem acionadas PARA QUE eu possa monitorar alterações automáticas no banco e garantir que as regras do site estão sendo aplicadas corretamente.  |
+| 14 | COMO professor de Eng. De Software II QUERO o relatório com os Casos de Testes PARA QUE eu possa validar o funcionamento do sistema.  |
+| 15 | COMO Time Scrum QUERO criar um protótipo interativo no Figma com todas as telas e funcionalidades do site PARA QUE a equipe e stakeholders possam visualizar e validar a experiência do usuário antes do desenvolvimento.  |
+| 16 | COMO professora de banco de dados relacional QUERO realizar junções de tabelas usando SQL (INNER JOIN, LEFT JOIN, RIGHT JOIN, etc.), PARA QUE eu possa recuperar informações de múltiplas tabelas de maneira eficiente e coesa.  |
+| 17 | COMO professora de banco de dados relacional QUERO utilizar funções SQL como COUNT, SUM, AVG, MIN e MAX em agrupamentos, PARA QUE eu possa gerar relatórios e análises com cálculos agregados de maneira eficiente.   |
+| 18 | COMO professora de banco de dados relacional QUERO consultar e executar Stored Procedures para encapsular lógica de negócios diretamente no banco PARA QUE eu possa obter resultados processados de forma eficiente sem precisar escrever consultas complexas manualmente.  |
+| 19 | COMO professora de banco de dados relacional QUERO consultar os logs e efeitos gerados pelas Triggers ao serem acionadas PARA QUE eu possa monitorar alterações automáticas no banco e garantir que as regras do site estão sendo aplicadas corretamente.  |
+
 
 <br>  
 
