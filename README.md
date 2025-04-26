@@ -7,13 +7,13 @@
   
 
 <p align="center">
-  <a href="#objetivo">Objetivo do Projeto </a>  |
+  <a href="#objetivo">Objetivo do Projeto</a>  |
   <a href="#sprints">Sprints</a>  |
   <a href="#backlogArtefatos">Backlog & Artefatos</a>  |
-  <a href="#visão">Visão do Produto </a>  |
-  <a href="#metodologia">Metodologia </a>  |
+  <a href="#visão">Visão do Produto</a>  |
+  <a href="#metodologia">Metodologia</a>  |
   <a href="#autores">Autores</a>  |
-  <a href="#tecnologias">Tecnologias </a>  
+  <a href="#tecnologias">Tecnologias</a>  
 </p>
 
 </br>
