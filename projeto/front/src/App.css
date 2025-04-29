@@ -1,0 +1,197 @@
+/* ============ VARIÁVEIS E ESTILOS GLOBAIS ============ */
+:root {
+  /* Cores */
+  --primary: #FF6B35;
+  --primary-dark: #E55627;
+  --secondary: #FFA500;
+  --dark: #222;
+  --dark-light: #424242;
+  --text-dark: #333;
+  --text-light: #fff;
+  --text-muted: #aaa;
+
+  /* Fontes */
+  --font-text: 'Open Sans', sans-serif;
+  --font-title: 'Space Grotesk', sans-serif;
+
+  /* Espaçamentos */
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  line-height: 1.6;
+  color: var(--text-dark);
+  font-family: var(--font-text);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============ LAYOUT PRINCIPAL ============ */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+}
+
+/* ============ NAVBAR ============ */
+.navbar {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-md) 0;
+  background-color: #ffffff;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+}
+
+.nav-button {
+  position: relative;
+  padding: var(--space-sm) var(--space-lg);
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  font-family: var(--font-title);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-button.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.nav-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 3px;
+}
+
+/* ============ SEÇÃO HERO ============ */
+.hero-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.title {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.description {
+  margin-bottom: var(--space-xl);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.learn-more {
+  background-color: var(--primary);
+  color: var(--text-light);
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.learn-more:hover {
+  background-color: var(--primary-dark);
+}
+
+.hero-image {
+  flex: 1;
+}
+
+.hero-image img {
+  width: 80%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  background-color: var(--dark);
+  color: var(--text-light);
+  padding: var(--space-xl) 0;
+  text-align: center;
+  width: 100%;
+  margin-top: auto;
+}
+
+.footer-info {
+  max-width: 600px;
+  margin: 0 auto var(--space-lg);
+  padding: 0 var(--space-md);
+}
+
+.footer h3 {
+  color: var(--secondary);
+  margin-bottom: var(--space-md);
+}
+
+.copyright {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 0 var(--space-md);
+}
+
+/* ============ RESPONSIVIDADE ============ */
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+  }
+  
+  .hero-text, .hero-image {
+    width: 100%;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .footer {
+    background-color: var(--dark-light);
+    color: var(--text-light);
+  }
+  
+  .copyright {
+    color: var(--text-light);
+  }
+}
