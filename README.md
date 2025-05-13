@@ -109,6 +109,7 @@ Estamos utilizando o Scrum como metodologia para o desenvolvimento da aplicaçã
 | 17 | COMO professora de banco de dados relacional QUERO utilizar funções SQL como COUNT, SUM, AVG, MIN e MAX em agrupamentos, PARA QUE eu possa gerar relatórios e análises com cálculos agregados de maneira eficiente.   |
 | 18 | COMO professora de banco de dados relacional QUERO consultar e executar Stored Procedures para encapsular lógica de negócios diretamente no banco PARA QUE eu possa obter resultados processados de forma eficiente sem precisar escrever consultas complexas manualmente.  |
 | 19 | COMO professora de banco de dados relacional QUERO consultar os logs e efeitos gerados pelas Triggers ao serem acionadas PARA QUE eu possa monitorar alterações automáticas no banco e garantir que as regras do site estão sendo aplicadas corretamente.  |
+| 20 | COMO professor de Eng. De Software II QUERO consultar a documentação dos casos de testes utilizados para validação do sistema.  |
 
 
 <br>  
