@@ -10,17 +10,17 @@
 Nesta segunda sprint, focamos no desenvolvimento da estrutura fundamental do nosso website e na implementação da visualização inicial dos dados de queimadas. Conectamos o site aos dados e criamos um mapa onde os focos de calor são exibidos, proporcionando uma primeira experiência visual dos dados para os usuários.
 <br>
 
-## Sprint Backlog
+## Sprint Backlog - Sprint 2
 
-| ID | Requisito          | Responsável | Prioridade | User Stories                                                 | Pontuação | Definition of Done                                           |
-|----|--------------------|-------------|------------|--------------------------------------------------------------|-----------|--------------------------------------------------------------|
-| 1  | 
-| 2  | 
-| 3  |
-| 4  |
-| 5  |
-| 6  |
-| 7  |
+| ID  | Requisito                                 | Responsável             | Prioridade   | Pontuação |
+|-----|--------------------------------------------|-------------------------|--------------|-----------|
+| 1   | Fazer Diagrama de Classes                  | Alisson                 | Alta         | 8         |
+| 2   | Ajustar layout do site                     | Alisson, Gustavo        | Média        | 5         |
+| 3   | Implementar conexão com o banco de dados   | Igor                    | Altíssima    | 13        |
+| 4   | Refinar o código desenvolvido              | Alisson, Igor, Gustavo  | Alta         | 8         |
+| 5   | Criar view no banco de dados               | Igor, Gustavo           | Alta         | 8         |
+| 6   | Criar estrutura de rotas do site           | Igor, Gustavo           | Alta         | 8         |
+
 
 
 
