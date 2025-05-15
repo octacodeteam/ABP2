@@ -41,6 +41,8 @@ Nesta segunda sprint, focamos na consolidação da base técnica do sistema, inc
 
 ## 🔗 Resultados :
 
+## Diagrama de Classes
+![image](https://github.com/user-attachments/assets/763151b3-abb5-424d-9fa3-9137e1638fe8)
 
 
 <br>
