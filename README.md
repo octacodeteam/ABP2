@@ -2,7 +2,7 @@
 
 **Início: 22/04 - Fim: 15/05**
 
-**Status do Projeto: Não iniciado**
+**Status do Projeto: Concluído✅**
 
 <span id="objetivo">
   
