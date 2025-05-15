@@ -7,7 +7,7 @@
 <span id="objetivo">
   
 ## 📌Objetivo da Sprint
-Nesta segunda sprint, focamos no desenvolvimento da estrutura fundamental do nosso website e na implementação da visualização inicial dos dados de queimadas. Conectamos o site aos dados e criamos um mapa onde os focos de calor são exibidos, proporcionando uma primeira experiência visual dos dados para os usuários.
+Nesta segunda sprint, focamos na consolidação da base técnica do sistema, incluindo a criação do diagrama de classes, a conexão do site com o banco de dados e a definição da estrutura de rotas. Também realizamos ajustes no layout visual e refinamentos no código, com o objetivo de melhorar a organização e preparar o sistema para a exibição estruturada dos dados de queimadas. Além disso, foram criadas views no banco para facilitar futuras consultas e visualizações no site.
 <br>
 
 ## Sprint Backlog - Sprint 2
