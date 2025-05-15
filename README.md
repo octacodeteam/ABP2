@@ -7,6 +7,7 @@
 <span id="objetivo">
   
 ## 📌Objetivo da Sprint
+Nesta segunda sprint, focamos no desenvolvimento da estrutura fundamental do nosso website e na implementação da visualização inicial dos dados de queimadas. Conectamos o site aos dados e criamos um mapa onde os focos de calor são exibidos, proporcionando uma primeira experiência visual dos dados para os usuários.
 <br>
 
 ## Sprint Backlog
@@ -32,14 +33,10 @@
 
 ## Retrospectiva
 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
-* 
+* A comunicação entre os integrantes pode ser mais constante para evitar retrabalho e dúvidas.
+* Tivemos boa evolução na execução das atividades, mesmo diante de imprevistos.
+* A organização das tarefas finais da sprint precisa de ajustes para garantir melhor controle e revisão.
+
   
 
 ## 🔗 Resultados :
