@@ -56,6 +56,6 @@ Nesta segunda sprint, focamos na consolidação da base técnica do sistema, inc
 
 ## 🎥 Apresentação do Projeto :
 
-<a href="">Youtube</a>
+<a href="https://www.youtube.com/watch?v=l6zIjvPT66c">Youtube</a>
 
 <br>
