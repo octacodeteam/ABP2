@@ -40,6 +40,13 @@ Nesta segunda sprint, focamos na consolidação da base técnica do sistema, inc
   
 
 ## 🔗 Resultados :
+## Mapa de Queimadas
+![Imagem do WhatsApp de 2025-05-15 à(s) 21 28 32_5cd01a59](https://github.com/user-attachments/assets/c275f295-8959-49c2-8fbd-9e35e6837b8d)
+
+## Gráfico de Queimadas - Total de Queimadas por Estado
+![Imagem do WhatsApp de 2025-05-15 à(s) 21 28 32_b43f44e4](https://github.com/user-attachments/assets/91ca1210-a354-4a6a-8f90-1cf50d182e32)
+
+
 
 ## Diagrama de Classes
 ![image](https://github.com/user-attachments/assets/763151b3-abb5-424d-9fa3-9137e1638fe8)
