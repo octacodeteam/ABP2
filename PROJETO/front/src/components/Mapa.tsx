@@ -3,11 +3,6 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
 
-const redIcon = new L.Icon({
-  iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-  iconSize: [32, 32],
-});
-
 interface Queimada {
   id: number;
   Latitude: number;
@@ -20,7 +15,25 @@ interface Queimada {
   FRP: number;
 }
 
-export const Mapa = ({ filtros }: { filtros: { estado: string, bioma:string, dataInicio: string, dataFim: string } }) => {
+// Função para obter o ícone baseado no valor de FRP
+const getFrpIcon = (frp: number) => {
+  frp = Math.max(0, frp);
+
+  let faixa = Math.floor(frp / 200) + 1;
+  if (faixa > 4) faixa = 4;
+
+  const iconUrl = `./${faixa}.png`;
+
+  return new L.Icon({
+    iconUrl,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+};
+
+
+export const Mapa = ({ filtros }: { filtros: { estado: string, dataInicio: string, dataFim: string } }) => {
   const [pontos, setPontos] = useState<Queimada[]>([]);
 
   useEffect(() => {
@@ -32,8 +45,6 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma:string, dat
 
       if (filtros.estado && filtros.estado !== 'todos') {
         params.append('estado', filtros.estado);
-      } else if (filtros.bioma && filtros.bioma !== 'todos') {
-        params.append('bioma', filtros.bioma);
       }
 
       const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
@@ -59,7 +70,11 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma:string, dat
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {pontos.map((ponto, idx) => (
-          <Marker key={idx} position={[ponto.Latitude, ponto.Longitude]} icon={redIcon}>
+          <Marker
+            key={idx}
+            position={[ponto.Latitude, ponto.Longitude]}
+            icon={getFrpIcon(ponto.FRP)}
+          >
             <Popup>
               <div>
                 <strong>Município:</strong> {ponto.Municipio}<br />
