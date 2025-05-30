@@ -1,0 +1,38 @@
+.frp-legend {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 16px 20px;
+  z-index: 1000;
+  min-width: 150px;
+}
+
+.frp-legend-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.frp-legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.frp-legend-item img {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.frp-legend-item span {
+  font-size: 15px;
+}
+
+.frp-legend-item:last-child {
+  margin-bottom: 0;
+}

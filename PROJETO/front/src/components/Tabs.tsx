@@ -25,6 +25,35 @@ function Tabs({
     dataFim: '2025-04-07',
   });
 
+  // const tableStyle = {
+  //   justifyContent: "center",
+  //   display: "flex",
+  //   padding: "0",
+  //   backgroundColor: "transparent",
+  //   border: "1px solid #000",
+  //   borderRadius: "8px",
+  // };
+  //
+  // const FRP1Style = {
+  //   color: "#f2b705"
+  // };
+  //
+  // const FRP2Style = {
+  //   color: "#d97904"
+  // };
+  //
+  // const FRP3Style = {
+  //   color: "#bf2604"
+  // };
+  //
+  // const FRP4Style = {
+  //   color: "#730202"
+  // };
+  //
+  // const FRP5Style = {
+  //   color: "#260101"
+  // };
+
   const navbarStyle = {
     display: "flex",
     justifyContent: "center",
@@ -53,7 +82,7 @@ function Tabs({
         <h1 style={{ textAlign: 'center' }}>
           {activeTab === "mapas" ? "Mapa de Queimadas" : "Gráfico de Queimadas"}
         </h1>
-        <Filtros onFiltrar={(estado: string, bioma:string, dataInicio: string, dataFim: string) =>
+        <Filtros onFiltrar={(estado: string, bioma: string, dataInicio: string, dataFim: string) =>
           setFiltros({ estado, bioma, dataInicio, dataFim })
         } />
         {activeTab === "mapas" ? (
@@ -61,6 +90,23 @@ function Tabs({
         ) : (
           <Grafico filtros={filtros} />
         )}
+       
+        {/* 
+        <p style={{ textAlign: 'center' }}>FRP (Fire rate power)</p>
+
+        <table style={tableStyle}>
+          <tbody>
+            <tr>
+              <td style={FRP1Style}>0 a 200</td>
+              <td style={FRP2Style}>201 a 400</td>
+              <td style={FRP3Style}>401 a 600</td>
+              <td style={FRP4Style}>601 a 800</td>
+              <td style={FRP5Style}>801 a 8000</td>
+            </tr>
+          </tbody>
+        </table>
+        */}
+
       </div>
     </div>
   );

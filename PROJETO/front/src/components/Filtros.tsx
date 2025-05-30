@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './style/Filtros.css';
 
 interface Props {
   onFiltrar: (estado: string, bioma: string, dataInicio: string, dataFim: string) => void;
@@ -49,11 +50,11 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   }, []);
 
   return (
-    <div className="p-4" style={{ textAlign: 'center' }}>
+    <div className="filtros-container">
       <select
         value={estado}
         onChange={e => setEstado(e.target.value)}
-        className="mr-2 p-2 border rounded"
+        className="filtro-select"
       >
         <option value="todos">Todos os estados</option>
         {estados.map(est => (
@@ -63,7 +64,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
       <select
         value={bioma}
         onChange={e => setBioma(e.target.value)}
-        className="mr-2 p-2 border rounded"
+        className="filtro-select"
       >
         <option value="todos">Todos os biomas</option>
         {biomas.map(b => (
@@ -74,22 +75,20 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
         type="date"
         value={dataInicio}
         onChange={e => setDataInicio(e.target.value)}
-        className="mr-2 p-2 border rounded"
+        className="filtro-input"
       />
-
       <input
         type="date"
         value={dataFim}
         onChange={e => setDataFim(e.target.value)}
-        className="mr-2 p-2 border rounded"
+        className="filtro-input"
       />
-
       <button
         onClick={() => {
           console.log('Aplicando filtros:', { estado, bioma, dataInicio, dataFim });
           onFiltrar(estado, bioma, dataInicio, dataFim);
         }}
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        className="filtro-btn"
       >
         Filtrar
       </button>

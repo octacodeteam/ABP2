@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
+import './style/Mapa.css';
 
 interface Queimada {
   id: number;
@@ -31,9 +32,9 @@ const getFrpIcon = (frp: number) => {
     popupAnchor: [0, -32],
   });
 };
+ 
 
-
-export const Mapa = ({ filtros }: { filtros: { estado: string, dataInicio: string, dataFim: string } }) => {
+export const Mapa = ({ filtros }: { filtros: { estado: string, bioma:string, dataInicio: string, dataFim: string } }) => {
   const [pontos, setPontos] = useState<Queimada[]>([]);
 
   useEffect(() => {
@@ -45,6 +46,9 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, dataInicio: strin
 
       if (filtros.estado && filtros.estado !== 'todos') {
         params.append('estado', filtros.estado);
+      }
+      if (filtros.bioma && filtros.bioma !== 'todos') {
+        params.append('bioma', filtros.bioma);
       }
 
       const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
@@ -63,8 +67,29 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, dataInicio: strin
   }, [filtros]);
 
   return (
-    <div style={{ width: '100vw', height: '60vh' }}>
-      <MapContainer center={[-14, -52]} zoom={4} style={{ width: '100%', height: '100%' }}>
+  <div style={{ width: '100vw', height: '60vh', position: 'relative' }}>
+    {/* Legenda FRP */}
+    <div className="frp-legend">
+      <div className="frp-legend-title">FRP (Fire Radiative Power)</div>
+      <div className="frp-legend-item">
+        <img src="./1.png" alt="FRP 0-199" />
+        <span>0 - 199</span>
+      </div>
+      <div className="frp-legend-item">
+        <img src="./2.png" alt="FRP 200-399" />
+        <span>200 - 399</span>
+      </div>
+      <div className="frp-legend-item">
+        <img src="./3.png" alt="FRP 400-599" />
+        <span>400 - 599</span>
+      </div>
+      <div className="frp-legend-item">
+        <img src="./4.png" alt="FRP 600+" />
+        <span>600+</span>
+      </div>
+    </div>
+    {/* Mapa */}
+    <MapContainer center={[-14, -52]} zoom={4} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           attribution='&copy; OpenStreetMap'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
