@@ -5,20 +5,24 @@ const routes = Router();
 
 routes.get('/api/queimadas', async (req, res) => {
   const { estado, bioma, dataInicio, dataFim } = req.query;
+
   try {
-    let query = 'SELECT * FROM queimadas WHERE "DataHora" BETWEEN $1 AND $2';
-    let params = [dataInicio, dataFim];
-    
+    let query = 'SELECT * FROM queimadas WHERE 1=1';
+    const params: any[] = [];
+
     if (estado && estado !== 'todos') {
-      query = 'SELECT * FROM queimadas WHERE "Estado" = $1 AND "DataHora" BETWEEN $2 AND $3';
-      params = [estado, dataInicio, dataFim];
-    }else if (bioma && bioma !== 'todos') {
-      query = 'SELECT * FROM queimadas WHERE "Bioma" = $1 AND "DataHora" BETWEEN $2 AND $3';
-      params = [bioma, dataInicio, dataFim];
+      params.push(estado);
+      query += ` AND "Estado" = $${params.length}`;
     }
-    else if (estado && bioma && estado !== 'todos' && bioma !== 'todos') {
-      query = 'SELECT * FROM queimadas WHERE "Estado" = $1 AND "Bioma" = $2 AND "DataHora" BETWEEN $3 AND $4';
-      params = [estado, bioma, dataInicio, dataFim];
+
+    if (bioma && bioma !== 'todos') {
+      params.push(bioma);
+      query += ` AND "Bioma" = $${params.length}`;
+    }
+
+    if (dataInicio && dataFim) {
+      params.push(dataInicio, dataFim);
+      query += ` AND "DataHora" BETWEEN $${params.length - 1} AND $${params.length}`;
     }
 
     console.log('Query:', query);
@@ -48,6 +52,40 @@ routes.get('/api/biomas', async (_req, res) => {
     res.json(result.rows.map((r: any) => r.Bioma));
   } catch (err) {
     console.error('Erro ao buscar biomas:', err);
+    res.status(500).json({ error: 'Erro ao buscar biomas' });
+  }
+});
+
+routes.get('/api/estados-por-bioma', async (req, res) => {
+  const { bioma } = req.query;
+  try {
+    const query = `
+      SELECT DISTINCT "Estado"
+      FROM queimadas
+      WHERE "Bioma" = $1
+      ORDER BY "Estado"
+    `;
+    const result = await pool.query(query, [bioma]);
+    res.json(result.rows.map((r: any) => r.Estado));
+  } catch (err) {
+    console.error('Erro ao buscar estados por bioma:', err);
+    res.status(500).json({ error: 'Erro ao buscar estados' });
+  }
+});
+
+routes.get('/api/biomas-por-estado', async (req, res) => {
+  const { estado } = req.query;
+  try {
+    const query = `
+      SELECT DISTINCT "Bioma"
+      FROM queimadas
+      WHERE "Estado" = $1
+      ORDER BY "Bioma"
+    `;
+    const result = await pool.query(query, [estado]);
+    res.json(result.rows.map((r: any) => r.Bioma));
+  } catch (err) {
+    console.error('Erro ao buscar biomas por estado:', err);
     res.status(500).json({ error: 'Erro ao buscar biomas' });
   }
 });

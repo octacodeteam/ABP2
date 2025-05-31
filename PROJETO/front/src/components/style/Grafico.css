@@ -1,0 +1,47 @@
+.dashboard-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chart-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chart-box {
+  flex: 1;
+  min-width: 500px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.listagem pre {
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  white-space: pre-line;
+}
+
+
+.listagem table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.listagem th,
+.listagem td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.listagem th {
+  background-color: #f0f0f0;
+}

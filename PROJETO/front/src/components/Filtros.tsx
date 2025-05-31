@@ -11,7 +11,6 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   const [biomas, setBiomas] = useState<string[]>([]);
   const [bioma, setBioma] = useState('todos');
 
-  // Define datas iniciais como padrão (últimos 30 dias)
   const [dataInicio, setDataInicio] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 30);
@@ -23,31 +22,59 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
     return d.toISOString().split('T')[0];
   });
 
+  // Atualiza estados quando bioma muda
   useEffect(() => {
-    fetch('http://localhost:3001/api/estados')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setEstados(data);
-        } else {
-          console.error('Formato inesperado de estados:', data);
-        }
-      })
-      .catch(err => console.error('Erro ao buscar estados:', err));
-  }, []);
+    if (bioma !== 'todos') {
+      fetch(`http://localhost:3001/api/estados-por-bioma?bioma=${bioma}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setEstados(data);
+          } else {
+            console.error('Formato inesperado de estados filtrados:', data);
+          }
+        })
+        .catch(err => console.error('Erro ao buscar estados filtrados:', err));
+    } else {
+      fetch('http://localhost:3001/api/estados')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setEstados(data);
+          } else {
+            console.error('Formato inesperado de estados:', data);
+          }
+        })
+        .catch(err => console.error('Erro ao buscar estados:', err));
+    }
+  }, [bioma]);
 
+  // Atualiza biomas quando estado muda
   useEffect(() => {
-    fetch('http://localhost:3001/api/biomas')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setBiomas(data);
-        } else {
-          console.error('Formato inesperado de biomas:', data);
-        }
-      })
-      .catch(err => console.error('Erro ao buscar biomas:', err));
-  }, []);
+    if (estado !== 'todos') {
+      fetch(`http://localhost:3001/api/biomas-por-estado?estado=${estado}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setBiomas(data);
+          } else {
+            console.error('Formato inesperado de biomas filtrados:', data);
+          }
+        })
+        .catch(err => console.error('Erro ao buscar biomas filtrados:', err));
+    } else {
+      fetch('http://localhost:3001/api/biomas')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setBiomas(data);
+          } else {
+            console.error('Formato inesperado de biomas:', data);
+          }
+        })
+        .catch(err => console.error('Erro ao buscar biomas:', err));
+    }
+  }, [estado]);
 
   return (
     <div className="filtros-container">
@@ -61,6 +88,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
           <option key={est} value={est}>{est}</option>
         ))}
       </select>
+
       <select
         value={bioma}
         onChange={e => setBioma(e.target.value)}
@@ -71,6 +99,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
           <option key={b} value={b}>{b}</option>
         ))}
       </select>
+
       <input
         type="date"
         value={dataInicio}
