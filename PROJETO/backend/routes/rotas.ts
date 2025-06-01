@@ -90,4 +90,21 @@ routes.get('/api/biomas-por-estado', async (req, res) => {
   }
 });
 
+routes.get('/api/risco-de-fogo', async (req, res) => {
+  const { estado } = req.query;
+  try {
+    const query = `
+      SELECT DISTINCT "Bioma"
+      FROM queimadas
+      WHERE "Estado" = $1
+      ORDER BY "Bioma"
+    `;
+    const result = await pool.query(query, [estado]);
+    res.json(result.rows.map((r: any) => r.Bioma));
+  } catch (err) {
+    console.error('Erro ao buscar biomas por estado:', err);
+    res.status(500).json({ error: 'Erro ao buscar biomas' });
+  }
+});
+
 export default routes;

@@ -1,35 +1,68 @@
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './style/Mapa.css';
-import { useMap } from 'react-leaflet';
 
-function AjustaVisualizacao({ geoJsonEstado, geoJsonBioma }: { geoJsonEstado: any, geoJsonBioma: any }) {
+function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>(undefined);
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
+
+function AjustaVisualizacao({
+  geoJsonEstado,
+  geoJsonBioma,
+  geoJsonBrasil
+}: {
+  geoJsonEstado: any,
+  geoJsonBioma: any,
+  geoJsonBrasil: any
+}) {
   const map = useMap();
+  const ultimaRegiao = useRef<'estado' | 'bioma' | 'brasil' | null>(null);
+  const ultimaChave = useRef<string>('');
+
+  const prevGeoJsonEstado = usePrevious(geoJsonEstado);
+  const prevGeoJsonBioma = usePrevious(geoJsonBioma);
 
   useEffect(() => {
-    // Se algum está carregando (null), não faz nada
-    if (geoJsonEstado === null && geoJsonBioma === null) {
-      return;
-    }
+    if (!map) return;
 
-    // Se ambos são undefined ou vazios, volta para o Brasil inteiro
-    if (!geoJsonEstado && !geoJsonBioma) {
-      map.setView([-14, -52], 4);
-      return;
-    }
-
-    // Prioridade: estado > bioma
-    const geo = geoJsonEstado?.features?.length ? geoJsonEstado : geoJsonBioma?.features?.length ? geoJsonBioma : null;
-    if (geo && geo.features.length > 0) {
-      const layer = L.geoJSON(geo);
+    const aplicarZoom = (geoJson: any, maxZoom: number) => {
+      const layer = L.geoJSON(geoJson);
       const bounds = layer.getBounds();
       if (bounds.isValid()) {
-        map.fitBounds(bounds, { maxZoom: 7, padding: [20, 20] });
+        map.fitBounds(bounds, { maxZoom, padding: [20, 20] });
       }
+    };
+
+    const novaChaveEstado = geoJsonEstado?.features?.[0]?.properties?.Estado || '';
+    const novaChaveBioma = geoJsonBioma?.features?.[0]?.properties?.BIOMA || '';
+
+    const estadoVazio = !geoJsonEstado?.features?.length;
+    const biomaVazio = !geoJsonBioma?.features?.length;
+    const brasilValido = !!geoJsonBrasil?.features?.length;
+
+    const estadoMudou = JSON.stringify(prevGeoJsonEstado) !== JSON.stringify(geoJsonEstado);
+    const biomaMudou = JSON.stringify(prevGeoJsonBioma) !== JSON.stringify(geoJsonBioma);
+
+    if (geoJsonEstado?.features?.length && ultimaChave.current !== novaChaveEstado && estadoMudou) {
+      aplicarZoom(geoJsonEstado, 7);
+      ultimaRegiao.current = 'estado';
+      ultimaChave.current = novaChaveEstado;
+    } else if (geoJsonBioma?.features?.length && ultimaChave.current !== novaChaveBioma && biomaMudou) {
+      aplicarZoom(geoJsonBioma, 7);
+      ultimaRegiao.current = 'bioma';
+      ultimaChave.current = novaChaveBioma;
+    } else if (estadoVazio && biomaVazio && brasilValido && ultimaChave.current !== 'brasil' && estadoMudou && biomaMudou) {
+      aplicarZoom(geoJsonBrasil, 5);
+      ultimaRegiao.current = 'brasil';
+      ultimaChave.current = 'brasil';
     }
-  }, [geoJsonEstado, geoJsonBioma, map]);
+  }, [geoJsonEstado, geoJsonBioma, geoJsonBrasil, map, prevGeoJsonEstado, prevGeoJsonBioma]);
 
   return null;
 }
@@ -46,7 +79,6 @@ interface Queimada {
   FRP: number;
 }
 
-// Ícone com base no FRP
 const getFrpIcon = (frp: number) => {
   frp = Math.max(0, frp);
   let faixa = Math.floor(frp / 200) + 1;
@@ -60,7 +92,6 @@ const getFrpIcon = (frp: number) => {
   });
 };
 
-// Calcula centro do polígono ou multipolígono
 function getPolygonCenter(geometry: any): [number, number] {
   const coords = geometry.coordinates;
   let latSum = 0;
@@ -68,22 +99,32 @@ function getPolygonCenter(geometry: any): [number, number] {
   let count = 0;
 
   if (geometry.type === 'Polygon') {
-    coords[0].forEach((point: number[]) => {
-      lngSum += point[0];
-      latSum += point[1];
-      count++;
+    const points = coords?.[0];
+    if (!Array.isArray(points)) return [0, 0];
+    points.forEach((point: number[]) => {
+      if (Array.isArray(point) && point.length === 2) {
+        lngSum += point[0];
+        latSum += point[1];
+        count++;
+      }
     });
   }
 
   if (geometry.type === 'MultiPolygon') {
-    coords.forEach((poly: any) => {
-      poly[0].forEach((point: number[]) => {
-        lngSum += point[0];
-        latSum += point[1];
-        count++;
+    coords?.forEach((poly: any) => {
+      const points = poly?.[0];
+      if (!Array.isArray(points)) return;
+      points.forEach((point: number[]) => {
+        if (Array.isArray(point) && point.length === 2) {
+          lngSum += point[0];
+          latSum += point[1];
+          count++;
+        }
       });
     });
   }
+
+  if (count === 0) return [0, 0];
 
   return [latSum / count, lngSum / count];
 }
@@ -92,8 +133,15 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   const [pontos, setPontos] = useState<Queimada[]>([]);
   const [geoJsonBioma, setGeoJsonBioma] = useState<any>(null);
   const [geoJsonEstado, setGeoJsonEstado] = useState<any>(null);
+  const [geoJsonBrasil, setGeoJsonBrasil] = useState<any>(null);
 
-  // Carrega dados de queimadas
+  useEffect(() => {
+    fetch('/brasil.geojson')
+      .then(res => res.json())
+      .then(setGeoJsonBrasil)
+      .catch(() => setGeoJsonBrasil(null));
+  }, []);
+
   useEffect(() => {
     if (filtros.dataInicio && filtros.dataFim) {
       const params = new URLSearchParams({
@@ -118,7 +166,7 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   }, [filtros]);
 
   useEffect(() => {
-    setGeoJsonBioma(null); // Limpa antes de carregar novo
+    setGeoJsonBioma(null);
     if (filtros.bioma && filtros.bioma !== 'todos') {
       fetch('/biomas.geojson')
         .then(res => res.json())
@@ -135,9 +183,8 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
     }
   }, [filtros.bioma]);
 
-  // Carrega estado selecionado
   useEffect(() => {
-    setGeoJsonEstado(null); // Limpa antes de carregar novo
+    setGeoJsonEstado(null);
     if (filtros.estado && filtros.estado !== 'todos') {
       fetch('/estados.geojson')
         .then(res => res.json())
@@ -156,16 +203,18 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
 
   return (
     <div style={{ width: '100vw', height: '60vh', position: 'relative' }}>
-      {/* ...legenda... */}
       <MapContainer center={[-14, -52]} zoom={4} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           attribution='&copy; OpenStreetMap'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <AjustaVisualizacao geoJsonEstado={geoJsonEstado} geoJsonBioma={geoJsonBioma} />
+        <AjustaVisualizacao
+          geoJsonEstado={geoJsonEstado}
+          geoJsonBioma={geoJsonBioma}
+          geoJsonBrasil={geoJsonBrasil}
+        />
 
-        {/* Exibe perímetro do estado */}
         {geoJsonEstado && (
           <GeoJSON
             data={geoJsonEstado}
@@ -177,7 +226,6 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           />
         )}
 
-        {/* Exibe perímetro do bioma */}
         {geoJsonBioma && (
           <GeoJSON
             data={geoJsonBioma}
@@ -189,12 +237,22 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           />
         )}
 
-        {/* Label com nome do estado */}
+        {!geoJsonEstado && !geoJsonBioma && geoJsonBrasil && (
+          <GeoJSON
+            data={geoJsonBrasil}
+            style={() => ({
+              color: 'black',
+              weight: 2,
+              fillOpacity: 0,
+            })}
+          />
+        )}
+
         {geoJsonEstado && geoJsonEstado.features.map(
           (feature: { properties: { Estado: string }, geometry: any }, idx: number) => {
-            const nome = feature.properties.Estado;
+            const nome = String(feature.properties?.Estado || '');
             const center = getPolygonCenter(feature.geometry);
-
+            if (!nome || isNaN(center[0]) || isNaN(center[1])) return null;
             return (
               <Marker
                 key={`label-estado-${idx}`}
@@ -210,12 +268,11 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           }
         )}
 
-        {/* Label com nome do bioma */}
         {geoJsonBioma && geoJsonBioma.features.map(
           (feature: { properties: { BIOMA: string }, geometry: any }, idx: number) => {
-            const nome = feature.properties.BIOMA;
+            const nome = String(feature.properties?.BIOMA || '');
             const center = getPolygonCenter(feature.geometry);
-
+            if (!nome || isNaN(center[0]) || isNaN(center[1])) return null;
             return (
               <Marker
                 key={`label-bioma-${idx}`}
@@ -231,7 +288,6 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           }
         )}
 
-        {/* Marcadores das queimadas */}
         {pontos.map((ponto, idx) => (
           <Marker
             key={idx}
