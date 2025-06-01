@@ -55,18 +55,22 @@ export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string,
         const estadosMap: Record<string, EstadoAgrupado> = {};
 
         for (const estado in totalPorEstado) {
+          // Filtra apenas FRPs positivos
+          const frps = frpPorEstado[estado].filter(frp => frp > 0);
+          const mediaFRP = frps.length > 0 ? frps.reduce((a, b) => a + b, 0) / frps.length : 0;
           graficoFormatado.push([estado, totalPorEstado[estado]]);
-
-          const frps = frpPorEstado[estado];
-          const mediaFRP = frps.reduce((a, b) => a + b, 0) / frps.length;
           frpFormatado.push([estado, +mediaFRP.toFixed(2)]);
         }
 
         for (const chave in agrupamento) {
           const [estado, bioma] = chave.split('-');
           const grupo = agrupamento[chave];
-          const mediaFRP = grupo.frps.reduce((a, b) => a + b, 0) / grupo.frps.length;
-          const mediaDias = grupo.dias.reduce((a, b) => a + b, 0) / grupo.dias.length;
+          // Filtra apenas valores positivos
+          const frpsPositivos = grupo.frps.filter(frp => frp > 0);
+          const diasPositivos = grupo.dias.filter(dia => dia > 0);
+
+          const mediaFRP = frpsPositivos.length > 0 ? frpsPositivos.reduce((a, b) => a + b, 0) / frpsPositivos.length : 0;
+          const mediaDias = diasPositivos.length > 0 ? diasPositivos.reduce((a, b) => a + b, 0) / diasPositivos.length : 0;
 
           if (!estadosMap[estado]) {
             estadosMap[estado] = { Estado: estado, Biomas: [] };

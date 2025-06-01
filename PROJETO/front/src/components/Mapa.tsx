@@ -3,6 +3,36 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import './style/Mapa.css';
+import { useMap } from 'react-leaflet';
+
+function AjustaVisualizacao({ geoJsonEstado, geoJsonBioma }: { geoJsonEstado: any, geoJsonBioma: any }) {
+  const map = useMap();
+
+  useEffect(() => {
+    // Se algum está carregando (null), não faz nada
+    if (geoJsonEstado === null && geoJsonBioma === null) {
+      return;
+    }
+
+    // Se ambos são undefined ou vazios, volta para o Brasil inteiro
+    if (!geoJsonEstado && !geoJsonBioma) {
+      map.setView([-14, -52], 4);
+      return;
+    }
+
+    // Prioridade: estado > bioma
+    const geo = geoJsonEstado?.features?.length ? geoJsonEstado : geoJsonBioma?.features?.length ? geoJsonBioma : null;
+    if (geo && geo.features.length > 0) {
+      const layer = L.geoJSON(geo);
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { maxZoom: 7, padding: [20, 20] });
+      }
+    }
+  }, [geoJsonEstado, geoJsonBioma, map]);
+
+  return null;
+}
 
 interface Queimada {
   id: number;
@@ -60,7 +90,8 @@ function getPolygonCenter(geometry: any): [number, number] {
 
 export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, dataInicio: string, dataFim: string } }) => {
   const [pontos, setPontos] = useState<Queimada[]>([]);
-  const [geoJsonData, setGeoJsonData] = useState<any>(null);
+  const [geoJsonBioma, setGeoJsonBioma] = useState<any>(null);
+  const [geoJsonEstado, setGeoJsonEstado] = useState<any>(null);
 
   // Carrega dados de queimadas
   useEffect(() => {
@@ -86,59 +117,70 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
     }
   }, [filtros]);
 
-  // Carrega apenas o bioma selecionado
   useEffect(() => {
-    const loadBioma = async () => {
-      if (filtros.bioma && filtros.bioma !== 'todos') {
-        try {
-          // Primeiro limpa os dados
-          setGeoJsonData(null);
-
-          const response = await fetch('/biomas.geojson');
-          const data = await response.json();
-
+    setGeoJsonBioma(null); // Limpa antes de carregar novo
+    if (filtros.bioma && filtros.bioma !== 'todos') {
+      fetch('/biomas.geojson')
+        .then(res => res.json())
+        .then(data => {
           const biomaFiltrado = {
             ...data,
             features: data.features.filter(
               (f: any) => f.properties.BIOMA?.toLowerCase() === filtros.bioma.toLowerCase()
             )
           };
-
-          setGeoJsonData(biomaFiltrado);
-        } catch (err) {
-          console.error('Erro ao carregar GeoJSON:', err);
-        }
-      } else {
-        setGeoJsonData(null);
-      }
-    };
-
-    loadBioma();
+          setGeoJsonBioma(biomaFiltrado);
+        })
+        .catch(() => setGeoJsonBioma(null));
+    }
   }, [filtros.bioma]);
+
+  // Carrega estado selecionado
+  useEffect(() => {
+    setGeoJsonEstado(null); // Limpa antes de carregar novo
+    if (filtros.estado && filtros.estado !== 'todos') {
+      fetch('/estados.geojson')
+        .then(res => res.json())
+        .then(data => {
+          const estadoFiltrado = {
+            ...data,
+            features: data.features.filter(
+              (f: any) => f.properties.Estado?.toLowerCase() === filtros.estado.toLowerCase()
+            )
+          };
+          setGeoJsonEstado(estadoFiltrado);
+        })
+        .catch(() => setGeoJsonEstado(null));
+    }
+  }, [filtros.estado]);
 
   return (
     <div style={{ width: '100vw', height: '60vh', position: 'relative' }}>
-      {/* Legenda FRP */}
-      <div className="frp-legend">
-        <div className="frp-legend-title">FRP (Fire Radiative Power)</div>
-        {[1, 2, 3, 4].map(faixa => (
-          <div key={faixa} className="frp-legend-item">
-            <img src={`./${faixa}.png`} alt={`FRP faixa ${faixa}`} />
-            <span>{faixa === 4 ? '600+' : `${(faixa - 1) * 200} - ${faixa * 200 - 1}`}</span>
-          </div>
-        ))}
-      </div>
-
+      {/* ...legenda... */}
       <MapContainer center={[-14, -52]} zoom={4} style={{ width: '100%', height: '100%' }}>
         <TileLayer
           attribution='&copy; OpenStreetMap'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Exibe bioma filtrado */}
-        {geoJsonData && (
+        <AjustaVisualizacao geoJsonEstado={geoJsonEstado} geoJsonBioma={geoJsonBioma} />
+
+        {/* Exibe perímetro do estado */}
+        {geoJsonEstado && (
           <GeoJSON
-            data={geoJsonData}
+            data={geoJsonEstado}
+            style={() => ({
+              color: 'black',
+              weight: 2,
+              fillOpacity: 0,
+            })}
+          />
+        )}
+
+        {/* Exibe perímetro do bioma */}
+        {geoJsonBioma && (
+          <GeoJSON
+            data={geoJsonBioma}
             style={() => ({
               color: 'green',
               weight: 2,
@@ -147,24 +189,47 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           />
         )}
 
-        {/* Label com nome do bioma */}
-        {geoJsonData && geoJsonData.features.map((feature: { properties: { BIOMA: string }, geometry: any }, idx: number) => {
-          const nome = feature.properties.BIOMA;
-          const center = getPolygonCenter(feature.geometry);
+        {/* Label com nome do estado */}
+        {geoJsonEstado && geoJsonEstado.features.map(
+          (feature: { properties: { Estado: string }, geometry: any }, idx: number) => {
+            const nome = feature.properties.Estado;
+            const center = getPolygonCenter(feature.geometry);
 
-          return (
-            <Marker
-              key={`label-${idx}`}
-              position={center}
-              interactive={false}
-              icon={L.divIcon({
-                className: 'bioma-label',
-                html: `<div>${nome}</div>`,
-                iconSize: [100, 20]
-              })}
-            />
-          );
-        })}
+            return (
+              <Marker
+                key={`label-estado-${idx}`}
+                position={center}
+                interactive={false}
+                icon={L.divIcon({
+                  className: 'estado-label',
+                  html: `<div>${nome}</div>`,
+                  iconSize: [100, 20]
+                })}
+              />
+            );
+          }
+        )}
+
+        {/* Label com nome do bioma */}
+        {geoJsonBioma && geoJsonBioma.features.map(
+          (feature: { properties: { BIOMA: string }, geometry: any }, idx: number) => {
+            const nome = feature.properties.BIOMA;
+            const center = getPolygonCenter(feature.geometry);
+
+            return (
+              <Marker
+                key={`label-bioma-${idx}`}
+                position={center}
+                interactive={false}
+                icon={L.divIcon({
+                  className: 'bioma-label',
+                  html: `<div>${nome}</div>`,
+                  iconSize: [100, 20]
+                })}
+              />
+            );
+          }
+        )}
 
         {/* Marcadores das queimadas */}
         {pontos.map((ponto, idx) => (
