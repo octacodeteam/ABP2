@@ -1,16 +1,30 @@
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import './style/Mapa.css';
 
-function usePrevious<T>(value: T): T | undefined {
-  const ref = useRef<T>(undefined);
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
+// Adicione este novo componente antes do componente Mapa
+const FrpLegend = () => {
+  const legendItems = [
+    { color: "#F2B705", label: "0 - 199" },
+    { color: "#D97904", label: "200 - 399" },
+    { color: "#BF2604", label: "400 - 599" },
+    { color: "#730202", label: "600 - 8.000" }
+  ];
+
+  return (
+    <div className="frp-legend">
+      <h4>Intensidade FRP</h4>
+      {legendItems.map((item, index) => (
+        <div key={index} className="frp-legend-item">
+          <div className="frp-dot" style={{ backgroundColor: item.color }} />
+          <span>{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 function AjustaVisualizacao({
   geoJsonEstado,
@@ -22,47 +36,46 @@ function AjustaVisualizacao({
   geoJsonBrasil: any
 }) {
   const map = useMap();
-  const ultimaRegiao = useRef<'estado' | 'bioma' | 'brasil' | null>(null);
-  const ultimaChave = useRef<string>('');
-
-  const prevGeoJsonEstado = usePrevious(geoJsonEstado);
-  const prevGeoJsonBioma = usePrevious(geoJsonBioma);
 
   useEffect(() => {
     if (!map) return;
 
-    const aplicarZoom = (geoJson: any, maxZoom: number) => {
-      const layer = L.geoJSON(geoJson);
-      const bounds = layer.getBounds();
-      if (bounds.isValid()) {
-        map.fitBounds(bounds, { maxZoom, padding: [20, 20] });
-      }
+    // Se Brasil ainda não carregou, não faz nada
+    if (geoJsonBrasil === null) return;
+
+    // Função auxiliar para verificar se um GeoJSON tem features válidas
+    const hasValidFeatures = (geoJson: any) => {
+      return geoJson && Array.isArray(geoJson.features) && geoJson.features.length > 0;
     };
 
-    const novaChaveEstado = geoJsonEstado?.features?.[0]?.properties?.Estado || '';
-    const novaChaveBioma = geoJsonBioma?.features?.[0]?.properties?.BIOMA || '';
+    const estadoValido = hasValidFeatures(geoJsonEstado);
+    const biomaValido = hasValidFeatures(geoJsonBioma);
 
-    const estadoVazio = !geoJsonEstado?.features?.length;
-    const biomaVazio = !geoJsonBioma?.features?.length;
-    const brasilValido = !!geoJsonBrasil?.features?.length;
-
-    const estadoMudou = JSON.stringify(prevGeoJsonEstado) !== JSON.stringify(geoJsonEstado);
-    const biomaMudou = JSON.stringify(prevGeoJsonBioma) !== JSON.stringify(geoJsonBioma);
-
-    if (geoJsonEstado?.features?.length && ultimaChave.current !== novaChaveEstado && estadoMudou) {
-      aplicarZoom(geoJsonEstado, 7);
-      ultimaRegiao.current = 'estado';
-      ultimaChave.current = novaChaveEstado;
-    } else if (geoJsonBioma?.features?.length && ultimaChave.current !== novaChaveBioma && biomaMudou) {
-      aplicarZoom(geoJsonBioma, 7);
-      ultimaRegiao.current = 'bioma';
-      ultimaChave.current = novaChaveBioma;
-    } else if (estadoVazio && biomaVazio && brasilValido && ultimaChave.current !== 'brasil' && estadoMudou && biomaMudou) {
-      aplicarZoom(geoJsonBrasil, 5);
-      ultimaRegiao.current = 'brasil';
-      ultimaChave.current = 'brasil';
+    if (estadoValido) {
+      // Prioriza estado se estiver selecionado
+      const layer = L.geoJSON(geoJsonEstado);
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) {
+        map.flyToBounds(bounds, { maxZoom: 7, padding: [20, 20], duration: 1.5 });
+      }
+    } else if (biomaValido) {
+      // Se só bioma estiver selecionado
+      const layer = L.geoJSON(geoJsonBioma);
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) {
+        map.flyToBounds(bounds, { maxZoom: 7, padding: [20, 20], duration: 1.5 });
+      }
+    } else {
+      // Visualização padrão do Brasil
+      const layer = L.geoJSON(geoJsonBrasil);
+      const bounds = layer.getBounds();
+      if (bounds.isValid()) {
+        map.flyToBounds(bounds, { maxZoom: 5, padding: [20, 20], duration: 1.5 });
+      } else {
+        map.flyTo([-14, -52], 4, { duration: 1.5 });
+      }
     }
-  }, [geoJsonEstado, geoJsonBioma, geoJsonBrasil, map, prevGeoJsonEstado, prevGeoJsonBioma]);
+  }, [geoJsonEstado, geoJsonBioma, geoJsonBrasil, map]);
 
   return null;
 }
@@ -307,6 +320,7 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           </Marker>
         ))}
       </MapContainer>
+      <FrpLegend />
     </div>
   );
 };
