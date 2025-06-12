@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './style/Filtros.css';
 
 interface Props {
-  onFiltrar: (estado: string, bioma: string, dataInicio: string, dataFim: string) => void;
+  onFiltrar: (estado: string, bioma: string, dataInicio: string, dataFim: string, tipoVisualizacao: string) => void;
 }
 
 export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
@@ -10,6 +10,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   const [estado, setEstado] = useState('todos');
   const [biomas, setBiomas] = useState<string[]>([]);
   const [bioma, setBioma] = useState('todos');
+  const [tipoVisualizacao, setTipoVisualizacao] = useState('focos'); // focos, risco, area
 
   const [dataInicio, setDataInicio] = useState(() => {
     const d = new Date();
@@ -79,6 +80,15 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   return (
     <div className="filtros-container">
       <select
+        value={tipoVisualizacao}
+        onChange={e => setTipoVisualizacao(e.target.value)}
+        className="filtro-select"
+      >
+        <option value="focos">Focos de calor</option>
+        <option value="risco">Risco de fogo</option>
+        <option value="area">Área queimada</option>
+      </select>
+      <select
         value={estado}
         onChange={e => setEstado(e.target.value)}
         className="filtro-select"
@@ -115,7 +125,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
       <button
         onClick={() => {
           console.log('Aplicando filtros:', { estado, bioma, dataInicio, dataFim });
-          onFiltrar(estado, bioma, dataInicio, dataFim);
+          onFiltrar(estado, bioma, dataInicio, dataFim, tipoVisualizacao);;
         }}
         className="filtro-btn"
       >

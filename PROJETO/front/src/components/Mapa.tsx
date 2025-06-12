@@ -142,7 +142,7 @@ function getPolygonCenter(geometry: any): [number, number] {
   return [latSum / count, lngSum / count];
 }
 
-export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, dataInicio: string, dataFim: string } }) => {
+export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, dataInicio: string, dataFim: string, tipoVisualizacao?: string } }) => {
   const [pontos, setPontos] = useState<Queimada[]>([]);
   const [geoJsonBioma, setGeoJsonBioma] = useState<any>(null);
   const [geoJsonEstado, setGeoJsonEstado] = useState<any>(null);
@@ -156,27 +156,33 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   }, []);
 
   useEffect(() => {
-    if (filtros.dataInicio && filtros.dataFim) {
-      const params = new URLSearchParams({
-        dataInicio: filtros.dataInicio,
-        dataFim: filtros.dataFim,
-      });
+  if (filtros.dataInicio && filtros.dataFim) {
+    const params = new URLSearchParams({
+      dataInicio: filtros.dataInicio,
+      dataFim: filtros.dataFim,
+    });
 
-      if (filtros.estado && filtros.estado !== 'todos') {
-        params.append('estado', filtros.estado);
-      }
-
-      if (filtros.bioma && filtros.bioma !== 'todos') {
-        params.append('bioma', filtros.bioma);
-      }
-
-      const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
-      fetch(url)
-        .then(res => res.json())
-        .then(setPontos)
-        .catch(err => console.error('Erro ao buscar queimadas:', err));
+    if (filtros.estado && filtros.estado !== 'todos') {
+      params.append('estado', filtros.estado);
     }
-  }, [filtros]);
+    if (filtros.bioma && filtros.bioma !== 'todos') {
+      params.append('bioma', filtros.bioma);
+    }
+
+    const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        let pontosFiltrados = data;
+        if (filtros.tipoVisualizacao === 'risco') {
+          pontosFiltrados = data.filter((p: any) => p.RiscoFogo > 0 && p.RiscoFogo <= 1);
+        }
+        // Adicione outros filtros conforme necessário
+        setPontos(pontosFiltrados);
+      })
+      .catch(err => console.error('Erro ao buscar queimadas:', err));
+  }
+}, [filtros]);
 
   useEffect(() => {
     setGeoJsonBioma(null);

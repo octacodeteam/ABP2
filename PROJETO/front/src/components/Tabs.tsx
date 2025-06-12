@@ -9,6 +9,7 @@ interface FiltrosProps {
   bioma: string;
   dataInicio: string;
   dataFim: string;
+  tipoVisualizacao: string; // Adicione esta linha
 }
 
 function Tabs({
@@ -23,6 +24,7 @@ function Tabs({
     bioma: 'todos',
     dataInicio: '2025-04-01',
     dataFim: '2025-04-07',
+    tipoVisualizacao: 'focos', // Adicione esta linha
   });
 
   // const tableStyle = {
@@ -82,15 +84,23 @@ function Tabs({
         <h1 style={{ textAlign: 'center' }}>
           {activeTab === "mapas" ? "Mapa de Queimadas" : "Gráfico de Queimadas"}
         </h1>
-        <Filtros onFiltrar={(estado: string, bioma: string, dataInicio: string, dataFim: string) =>
-          setFiltros({ estado, bioma, dataInicio, dataFim })
-        } />
+        <Filtros
+          onFiltrar={(
+            estado: string,
+            bioma: string,
+            dataInicio: string,
+            dataFim: string,
+            tipoVisualizacao: string // Novo parâmetro
+          ) =>
+            setFiltros({ estado, bioma, dataInicio, dataFim, tipoVisualizacao })
+          }
+        />
         {activeTab === "mapas" ? (
           <Mapa filtros={filtros} />
         ) : (
           <Grafico filtros={filtros} />
         )}
-       
+
         {/* 
         <p style={{ textAlign: 'center' }}>FRP (Fire rate power)</p>
 
