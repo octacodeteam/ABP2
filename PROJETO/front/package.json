@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "georaster": "^1.6.0",
+    "georaster-layer-for-leaflet": "^3.10.0",
     "leaflet": "^1.9.4",
     "leaflet-geotiff": "^0.2.0",
     "plotty": "^0.4.9",

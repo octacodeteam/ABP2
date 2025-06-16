@@ -2,6 +2,7 @@ import { Router } from "express";
 import { pool } from '../controllers/db';
 import fs from 'fs';
 import path from 'path';
+import * as turf from '@turf/turf';
 
 const routes = Router();
 
@@ -144,16 +145,74 @@ routes.get('/api/risco-de-fogo', async (req, res) => {
 });
 
 // NOVA ROTA: Área Queimada (GeoJSON filtrado por mês e ano)
-routes.get('/api/area-queimada', (_req, res) => {
+routes.get('/api/area-queimada', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, '../data/areaqueimada.geojson');
-    const rawData = fs.readFileSync(filePath, 'utf-8');
-    const geoJson = JSON.parse(rawData);
-    res.json(geoJson);
+    const { mesInicio, mesFim, estado, bioma } = req.query;
+
+    if (!mesInicio || !mesFim) {
+      return res.status(400).json({ error: 'mesInicio e mesFim são obrigatórios.' });
+    }
+
+    const startMonth = parseInt((mesInicio as string).split('-')[1]);
+    const endMonth = parseInt((mesFim as string).split('-')[1]);
+
+    const resultFeatures: any[] = [];
+
+    // Carrega arquivos de área queimada de acordo com o intervalo de meses
+    for (let mes = startMonth; mes <= endMonth; mes++) {
+      const paddedMonth = mes.toString().padStart(2, '0');
+      const filename = `area_queimada_2025_${paddedMonth}.geojson`;
+      const filePath = path.join(__dirname, '../data', filename);
+
+      if (!fs.existsSync(filePath)) continue;
+
+      const rawData = fs.readFileSync(filePath, 'utf-8');
+      const geojson = JSON.parse(rawData);
+
+      resultFeatures.push(...geojson.features);
+    }
+
+    let featuresFiltradas = resultFeatures;
+
+    // Carrega GeoJSON de estados se necessário
+    if (estado && estado !== 'todos') {
+      const estadoData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/estados.geojson'), 'utf-8'));
+      const estadoFeature = estadoData.features.find(
+        (f: any) => f.properties.Estado.toLowerCase() === (estado as string).toLowerCase()
+      );
+
+      if (estadoFeature) {
+        featuresFiltradas = featuresFiltradas.filter((feature) =>
+          turf.booleanIntersects(feature, estadoFeature)
+        );
+      }
+    }
+
+    // Carrega GeoJSON de biomas se necessário
+    if (bioma && bioma !== 'todos') {
+      const biomaData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/biomas.geojson'), 'utf-8'));
+      const biomaFeature = biomaData.features.find(
+        (f: any) => f.properties.BIOMA.toLowerCase() === (bioma as string).toLowerCase()
+      );
+
+      if (biomaFeature) {
+        featuresFiltradas = featuresFiltradas.filter((feature) =>
+          turf.booleanIntersects(feature, biomaFeature)
+        );
+      }
+    }
+
+    const output = {
+      type: 'FeatureCollection',
+      features: featuresFiltradas
+    };
+
+    res.json(output);
+
   } catch (error) {
-    console.error('Erro ao carregar área queimada:', error);
-    res.status(500).json({ error: 'Falha ao carregar dados de área queimada.' });
+    console.error('Erro ao processar área queimada:', error);
+    res.status(500).json({ error: 'Erro ao processar os dados de área queimada.' });
   }
-});
+})
 
 export default routes;

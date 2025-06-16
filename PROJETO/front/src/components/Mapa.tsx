@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import './style/Mapa.css';
 import 'leaflet-geotiff';
 import 'plotty';
+import { ImageOverlay } from 'react-leaflet';
 
 // To avoid TypeScript errors, declare the global variable for leaflet-geotiff
 declare global {
@@ -14,15 +15,25 @@ declare global {
   }
 }
 
-// Example usage (uncomment and adapt as needed, and ensure 'map' is defined):
-// const raster = new window.L.LeafletGeotiff('http://localhost:3000/seu.tif', {
-//   renderer: new window.L.LeafletGeotiff.Plotty({
-//     displayMin: 0,
-//     displayMax: 255,
-//     colorScale: 'viridis',
-//   }),
-// });
-// raster.addTo(map);
+export default function MapPage() {
+  const bounds = [
+    [-28.87, -74.02], // [sul, oeste] — ajuste com base na área da imagem
+    [5.27, -33.75],   // [norte, leste]
+  ];
+
+  return (
+    <MapContainer center={[-15, -54]} zoom={4} style={{ height: "100vh" }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <ImageOverlay
+        url="/risco_fogo_brasil.png"
+        bounds={bounds}
+        opacity={0.6}
+      />
+    </MapContainer>
+  );
+}
 
 function RiscoFogoRaster({ url }: { url: string }) {
   const map = useMap();
@@ -219,11 +230,7 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
     }
 
     // Risco de Fogo
-    {
-      filtros.tipoVisualizacao === 'risco' && (
-        <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo.tif" />
-      ); // Adiciona camada de risco de fogo
-    }
+
 
     // Focos de Calor (Queimadas)
     if (filtros.tipoVisualizacao === 'focos' && filtros.dataInicio && filtros.dataFim) {
@@ -304,9 +311,19 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
         )}
 
         {filtros.tipoVisualizacao === 'risco' && (
-          <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo.tif" />
+          <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo_brasil.tif" />
+        )}
+        {filtros.tipoVisualizacao === 'risco' && (
+          <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo_brasil.tif" />
         )}
 
+        {filtros.tipoVisualizacao === 'risco-png' && (
+          <ImageOverlay
+            url="/risco_fogo_brasil.png"
+            bounds={[[-28.87, -74.02], [5.27, -33.75]]}
+            opacity={0.6}
+          />
+        )}
         {pontos.map((ponto, idx) => (
           <Marker key={idx} position={[ponto.Latitude, ponto.Longitude]} icon={getFrpIcon(ponto.FRP)}>
             <Popup>
