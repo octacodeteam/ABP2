@@ -14,7 +14,7 @@ areaQueimadaRoutes.get('/api/area-queimada', (req, res) => {
   const inicioNum = Number(mesInicio.replace('-', ''));
   const fimNum = Number(mesFim.replace('-', ''));
 
-  const filePath = path.resolve(__dirname, '../data/area_queimada_2025_01_a_04.geojson');
+  const filePath = path.resolve(__dirname, '../data/areaqueimada.geojson');
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
       console.error('Erro ao ler o arquivo GeoJSON:', err);

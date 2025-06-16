@@ -133,10 +133,7 @@ routes.get('/api/risco-de-fogo', async (req, res) => {
   const { estado } = req.query;
   try {
     const query = `
-      SELECT DISTINCT "Bioma"
-      FROM queimadas
-      WHERE "Estado" = $1
-      ORDER BY "Bioma"
+      SELECT * FROM "tabela_raster"
     `;
     const result = await pool.query(query, [estado]);
     res.json(result.rows.map((r: any) => r.Bioma));
@@ -149,7 +146,7 @@ routes.get('/api/risco-de-fogo', async (req, res) => {
 // NOVA ROTA: Área Queimada (GeoJSON filtrado por mês e ano)
 routes.get('/api/area-queimada', (_req, res) => {
   try {
-    const filePath = path.join(__dirname, '../data/area_queimada_2025_01_a_04.geojson');
+    const filePath = path.join(__dirname, '../data/areaqueimada.geojson');
     const rawData = fs.readFileSync(filePath, 'utf-8');
     const geoJson = JSON.parse(rawData);
     res.json(geoJson);

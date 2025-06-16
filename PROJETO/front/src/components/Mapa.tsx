@@ -3,6 +3,62 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import './style/Mapa.css';
+import 'leaflet-geotiff';
+import 'plotty';
+
+// To avoid TypeScript errors, declare the global variable for leaflet-geotiff
+declare global {
+  interface Window {
+    riscoLayer?: any;
+    L: any;
+  }
+}
+
+// Example usage (uncomment and adapt as needed, and ensure 'map' is defined):
+// const raster = new window.L.LeafletGeotiff('http://localhost:3000/seu.tif', {
+//   renderer: new window.L.LeafletGeotiff.Plotty({
+//     displayMin: 0,
+//     displayMax: 255,
+//     colorScale: 'viridis',
+//   }),
+// });
+// raster.addTo(map);
+
+function RiscoFogoRaster({ url }: { url: string }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!url || !map) return;
+
+    // Remove camadas antigas se necessário
+    if (window.riscoLayer) {
+      map.removeLayer(window.riscoLayer);
+      window.riscoLayer = null;
+    }
+
+    // Adiciona o raster
+    const PlottyRenderer = window.L.LeafletGeotiff?.Plotty || window.L.LeafletGeotiff?.plotty;
+    const raster = new window.L.LeafletGeotiff(url, {
+      renderer: new PlottyRenderer({
+        displayMin: 0,
+        displayMax: 255,
+        colorScale: 'viridis',
+      }),
+    });
+    raster.addTo(map);
+    window.riscoLayer = raster;
+
+    return () => {
+      if (window.riscoLayer) {
+        map.removeLayer(window.riscoLayer);
+        window.riscoLayer = null;
+      }
+    };
+  }, [url, map]);
+
+  return null;
+}
+
 
 const FrpLegend = () => {
   const legendItems = [
@@ -151,33 +207,39 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   }, []);
 
   useEffect(() => {
+    // Área Queimada (GeoJSON)
     if (filtros.tipoVisualizacao === 'area' && filtros.dataInicio && filtros.dataFim) {
       const url = `http://localhost:3001/api/area-queimada?mesInicio=${filtros.dataInicio}&mesFim=${filtros.dataFim}`;
       fetch(url)
         .then(res => res.json())
         .then(setAreaQueimada)
         .catch(() => setAreaQueimada(null));
+      setPontos([]); // Limpa pontos
       return;
     }
 
-    if (filtros.dataInicio && filtros.dataFim) {
+    // Risco de Fogo
+    {
+      filtros.tipoVisualizacao === 'risco' && (
+        <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo.tif" />
+      ); // Adiciona camada de risco de fogo
+    }
+
+    // Focos de Calor (Queimadas)
+    if (filtros.tipoVisualizacao === 'focos' && filtros.dataInicio && filtros.dataFim) {
       const params = new URLSearchParams({
         dataInicio: filtros.dataInicio,
         dataFim: filtros.dataFim,
       });
+      if (filtros.estado && filtros.estado !== 'todos') params.append('estado', filtros.estado);
+      if (filtros.bioma && filtros.bioma !== 'todos') params.append('bioma', filtros.bioma);
 
-      if (filtros.estado && filtros.estado !== 'todos') {
-        params.append('estado', filtros.estado);
-      }
-      if (filtros.bioma && filtros.bioma !== 'todos') {
-        params.append('bioma', filtros.bioma);
-      }
-
-      const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
-      fetch(url)
+      fetch(`http://localhost:3001/api/queimadas?${params.toString()}`)
         .then(res => res.json())
         .then(setPontos)
-        .catch(err => console.error('Erro ao buscar queimadas:', err));
+        .catch(() => setPontos([]));
+      setAreaQueimada(null); // Limpa área queimada
+      return;
     }
   }, [filtros]);
 
@@ -233,8 +295,18 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
 
         {geoJsonEstado && <GeoJSON data={geoJsonEstado} style={() => ({ color: 'black', weight: 2, fillOpacity: 0 })} />}
         {geoJsonBioma && <GeoJSON data={geoJsonBioma} style={() => ({ color: 'green', weight: 2, fillOpacity: 0.2 })} />}
-        {!geoJsonEstado && !geoJsonBioma && geoJsonBrasil && <GeoJSON data={geoJsonBrasil} style={() => ({ color: 'black', weight: 2, fillOpacity: 0 })} />}
-        {filtros.tipoVisualizacao === 'area' && areaQueimada && <GeoJSON data={areaQueimada} style={() => ({ color: 'red', weight: 1, fillOpacity: 0.4 })} />}
+        {!geoJsonEstado && !geoJsonBioma && geoJsonBrasil && (
+          <GeoJSON data={geoJsonBrasil} style={() => ({ color: 'black', weight: 2, fillOpacity: 0 })} />
+        )}
+
+        {filtros.tipoVisualizacao === 'area' && areaQueimada && (
+          <GeoJSON data={areaQueimada} style={() => ({ color: 'red', weight: 1, fillOpacity: 0.4 })} />
+        )}
+
+        {filtros.tipoVisualizacao === 'risco' && (
+          <RiscoFogoRaster url="http://localhost:3001/static/risco_fogo.tif" />
+        )}
+
         {pontos.map((ponto, idx) => (
           <Marker key={idx} position={[ponto.Latitude, ponto.Longitude]} icon={getFrpIcon(ponto.FRP)}>
             <Popup>
