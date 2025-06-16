@@ -4,7 +4,6 @@ import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import './style/Mapa.css';
 
-// Adicione este novo componente antes do componente Mapa
 const FrpLegend = () => {
   const legendItems = [
     { color: "#F2B705", label: "0 - 199" },
@@ -40,10 +39,8 @@ function AjustaVisualizacao({
   useEffect(() => {
     if (!map) return;
 
-    // Se Brasil ainda não carregou, não faz nada
     if (geoJsonBrasil === null) return;
 
-    // Função auxiliar para verificar se um GeoJSON tem features válidas
     const hasValidFeatures = (geoJson: any) => {
       return geoJson && Array.isArray(geoJson.features) && geoJson.features.length > 0;
     };
@@ -52,21 +49,18 @@ function AjustaVisualizacao({
     const biomaValido = hasValidFeatures(geoJsonBioma);
 
     if (estadoValido) {
-      // Prioriza estado se estiver selecionado
       const layer = L.geoJSON(geoJsonEstado);
       const bounds = layer.getBounds();
       if (bounds.isValid()) {
         map.flyToBounds(bounds, { maxZoom: 7, padding: [20, 20], duration: 1.5 });
       }
     } else if (biomaValido) {
-      // Se só bioma estiver selecionado
       const layer = L.geoJSON(geoJsonBioma);
       const bounds = layer.getBounds();
       if (bounds.isValid()) {
         map.flyToBounds(bounds, { maxZoom: 7, padding: [20, 20], duration: 1.5 });
       }
     } else {
-      // Visualização padrão do Brasil
       const layer = L.geoJSON(geoJsonBrasil);
       const bounds = layer.getBounds();
       if (bounds.isValid()) {
@@ -94,9 +88,9 @@ interface Queimada {
 
 const getFrpIcon = (frp: number) => {
   frp = Math.max(0, frp);
-  let faixa = Math.floor(frp / 200) + 1;
-  if (faixa > 4) faixa = 4;
-  const iconUrl = `./${faixa}.png`;
+  let frpFaixa = Math.floor(frp / 200) + 1;
+  if (frpFaixa > 4) frpFaixa = 4;
+  const iconUrl = `./${frpFaixa}.png`;
   return new L.Icon({
     iconUrl,
     iconSize: [32, 32],
@@ -147,6 +141,7 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   const [geoJsonBioma, setGeoJsonBioma] = useState<any>(null);
   const [geoJsonEstado, setGeoJsonEstado] = useState<any>(null);
   const [geoJsonBrasil, setGeoJsonBrasil] = useState<any>(null);
+  const [areaQueimada, setAreaQueimada] = useState<any>(null);
 
   useEffect(() => {
     fetch('/brasil.geojson')
@@ -156,33 +151,35 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   }, []);
 
   useEffect(() => {
-  if (filtros.dataInicio && filtros.dataFim) {
-    const params = new URLSearchParams({
-      dataInicio: filtros.dataInicio,
-      dataFim: filtros.dataFim,
-    });
-
-    if (filtros.estado && filtros.estado !== 'todos') {
-      params.append('estado', filtros.estado);
-    }
-    if (filtros.bioma && filtros.bioma !== 'todos') {
-      params.append('bioma', filtros.bioma);
+    if (filtros.tipoVisualizacao === 'area' && filtros.dataInicio) {
+      const mesAno = filtros.dataInicio; // já vem no formato yyyy-MM
+      fetch(`http://localhost:3001/api/area-queimada?mesAno=${mesAno}`)
+        .then(res => res.json())
+        .then(setAreaQueimada)
+        .catch(() => setAreaQueimada(null));
+      return;
     }
 
-    const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        let pontosFiltrados = data;
-        if (filtros.tipoVisualizacao === 'risco') {
-          pontosFiltrados = data.filter((p: any) => p.RiscoFogo > 0 && p.RiscoFogo <= 1);
-        }
-        // Adicione outros filtros conforme necessário
-        setPontos(pontosFiltrados);
-      })
-      .catch(err => console.error('Erro ao buscar queimadas:', err));
-  }
-}, [filtros]);
+    if (filtros.dataInicio && filtros.dataFim) {
+      const params = new URLSearchParams({
+        dataInicio: filtros.dataInicio,
+        dataFim: filtros.dataFim,
+      });
+
+      if (filtros.estado && filtros.estado !== 'todos') {
+        params.append('estado', filtros.estado);
+      }
+      if (filtros.bioma && filtros.bioma !== 'todos') {
+        params.append('bioma', filtros.bioma);
+      }
+
+      const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(setPontos)
+        .catch(err => console.error('Erro ao buscar queimadas:', err));
+    }
+  }, [filtros]);
 
   useEffect(() => {
     setGeoJsonBioma(null);
@@ -267,44 +264,15 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           />
         )}
 
-        {geoJsonEstado && geoJsonEstado.features.map(
-          (feature: { properties: { Estado: string }, geometry: any }, idx: number) => {
-            const nome = String(feature.properties?.Estado || '');
-            const center = getPolygonCenter(feature.geometry);
-            if (!nome || isNaN(center[0]) || isNaN(center[1])) return null;
-            return (
-              <Marker
-                key={`label-estado-${idx}`}
-                position={center}
-                interactive={false}
-                icon={L.divIcon({
-                  className: 'estado-label',
-                  html: `<div>${nome}</div>`,
-                  iconSize: [100, 20]
-                })}
-              />
-            );
-          }
-        )}
-
-        {geoJsonBioma && geoJsonBioma.features.map(
-          (feature: { properties: { BIOMA: string }, geometry: any }, idx: number) => {
-            const nome = String(feature.properties?.BIOMA || '');
-            const center = getPolygonCenter(feature.geometry);
-            if (!nome || isNaN(center[0]) || isNaN(center[1])) return null;
-            return (
-              <Marker
-                key={`label-bioma-${idx}`}
-                position={center}
-                interactive={false}
-                icon={L.divIcon({
-                  className: 'bioma-label',
-                  html: `<div>${nome}</div>`,
-                  iconSize: [100, 20]
-                })}
-              />
-            );
-          }
+        {filtros.tipoVisualizacao === 'area' && areaQueimada && (
+          <GeoJSON
+            data={areaQueimada}
+            style={() => ({
+              color: 'red',
+              weight: 1,
+              fillOpacity: 0.4,
+            })}
+          />
         )}
 
         {pontos.map((ponto, idx) => (

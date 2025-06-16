@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { pool } from '../controllers/db';
+import fs from 'fs';
+import path from 'path';
 
 const routes = Router();
 
@@ -141,6 +143,19 @@ routes.get('/api/risco-de-fogo', async (req, res) => {
   } catch (err) {
     console.error('Erro ao buscar biomas por estado:', err);
     res.status(500).json({ error: 'Erro ao buscar biomas' });
+  }
+});
+
+// NOVA ROTA: Área Queimada (GeoJSON filtrado por mês e ano)
+routes.get('/api/area-queimada', (_req, res) => {
+  try {
+    const filePath = path.join(__dirname, '../data/area_queimada_2025_01_a_04.geojson');
+    const rawData = fs.readFileSync(filePath, 'utf-8');
+    const geoJson = JSON.parse(rawData);
+    res.json(geoJson);
+  } catch (error) {
+    console.error('Erro ao carregar área queimada:', error);
+    res.status(500).json({ error: 'Falha ao carregar dados de área queimada.' });
   }
 });
 

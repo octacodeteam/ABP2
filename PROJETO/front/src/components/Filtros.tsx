@@ -10,7 +10,7 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   const [estado, setEstado] = useState('todos');
   const [biomas, setBiomas] = useState<string[]>([]);
   const [bioma, setBioma] = useState('todos');
-  const [tipoVisualizacao, setTipoVisualizacao] = useState('focos'); // focos, risco, area
+  const [tipoVisualizacao, setTipoVisualizacao] = useState('focos');
 
   const [dataInicio, setDataInicio] = useState(() => {
     const d = new Date();
@@ -23,71 +23,55 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
     return d.toISOString().split('T')[0];
   });
 
-  // Atualiza estados quando bioma muda
-  useEffect(() => {
-    if (bioma !== 'todos') {
-      fetch(`http://localhost:3001/api/estados-por-bioma?bioma=${bioma}`)
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setEstados(data);
-          } else {
-            console.error('Formato inesperado de estados filtrados:', data);
-          }
-        })
-        .catch(err => console.error('Erro ao buscar estados filtrados:', err));
+  const handleTipoVisualizacaoChange = (value: string) => {
+    setTipoVisualizacao(value);
+
+    if (value === 'area') {
+      const hoje = new Date();
+      const mesAno = hoje.toISOString().slice(0, 7); // yyyy-MM
+      setDataInicio(mesAno);
+      setDataFim(mesAno);
     } else {
-      fetch('http://localhost:3001/api/estados')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setEstados(data);
-          } else {
-            console.error('Formato inesperado de estados:', data);
-          }
-        })
-        .catch(err => console.error('Erro ao buscar estados:', err));
+      const hoje = new Date();
+      const inicio = new Date();
+      inicio.setDate(hoje.getDate() - 30);
+      setDataInicio(inicio.toISOString().split('T')[0]);
+      setDataFim(hoje.toISOString().split('T')[0]);
     }
+  };
+
+  useEffect(() => {
+    const endpoint = bioma !== 'todos'
+      ? `http://localhost:3001/api/estados-por-bioma?bioma=${bioma}`
+      : 'http://localhost:3001/api/estados';
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(setEstados)
+      .catch(err => console.error('Erro ao buscar estados:', err));
   }, [bioma]);
 
-  // Atualiza biomas quando estado muda
   useEffect(() => {
-    if (estado !== 'todos') {
-      fetch(`http://localhost:3001/api/biomas-por-estado?estado=${estado}`)
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setBiomas(data);
-          } else {
-            console.error('Formato inesperado de biomas filtrados:', data);
-          }
-        })
-        .catch(err => console.error('Erro ao buscar biomas filtrados:', err));
-    } else {
-      fetch('http://localhost:3001/api/biomas')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setBiomas(data);
-          } else {
-            console.error('Formato inesperado de biomas:', data);
-          }
-        })
-        .catch(err => console.error('Erro ao buscar biomas:', err));
-    }
+    const endpoint = estado !== 'todos'
+      ? `http://localhost:3001/api/biomas-por-estado?estado=${estado}`
+      : 'http://localhost:3001/api/biomas';
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(setBiomas)
+      .catch(err => console.error('Erro ao buscar biomas:', err));
   }, [estado]);
 
   return (
     <div className="filtros-container">
       <select
         value={tipoVisualizacao}
-        onChange={e => setTipoVisualizacao(e.target.value)}
+        onChange={e => handleTipoVisualizacaoChange(e.target.value)}
         className="filtro-select"
       >
         <option value="focos">Focos de calor</option>
         <option value="risco">Risco de fogo</option>
         <option value="area">Área queimada</option>
       </select>
+
       <select
         value={estado}
         onChange={e => setEstado(e.target.value)}
@@ -110,22 +94,36 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
         ))}
       </select>
 
-      <input
-        type="date"
-        value={dataInicio}
-        onChange={e => setDataInicio(e.target.value)}
-        className="filtro-input"
-      />
-      <input
-        type="date"
-        value={dataFim}
-        onChange={e => setDataFim(e.target.value)}
-        className="filtro-input"
-      />
+      {tipoVisualizacao === 'area' ? (
+        <>
+          <input
+            type="month"
+            value={dataInicio}
+            onChange={e => setDataInicio(e.target.value)}
+            className="filtro-input"
+          />
+        </>
+      ) : (
+        <>
+          <input
+            type="date"
+            value={dataInicio}
+            onChange={e => setDataInicio(e.target.value)}
+            className="filtro-input"
+          />
+          <input
+            type="date"
+            value={dataFim}
+            onChange={e => setDataFim(e.target.value)}
+            className="filtro-input"
+          />
+        </>
+      )}
+
       <button
         onClick={() => {
-          console.log('Aplicando filtros:', { estado, bioma, dataInicio, dataFim });
-          onFiltrar(estado, bioma, dataInicio, dataFim, tipoVisualizacao);;
+          console.log('Aplicando filtros:', { estado, bioma, dataInicio, dataFim, tipoVisualizacao });
+          onFiltrar(estado, bioma, dataInicio, dataFim, tipoVisualizacao);
         }}
         className="filtro-btn"
       >
