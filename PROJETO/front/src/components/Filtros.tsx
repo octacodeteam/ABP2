@@ -12,27 +12,19 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
   const [bioma, setBioma] = useState('todos');
   const [tipoVisualizacao, setTipoVisualizacao] = useState('focos');
 
-  const [dataInicio, setDataInicio] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 30);
-    return d.toISOString().split('T')[0];
-  });
-
-  const [dataFim, setDataFim] = useState(() => {
-    const d = new Date();
-    return d.toISOString().split('T')[0];
-  });
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
 
   const handleTipoVisualizacaoChange = (value: string) => {
     setTipoVisualizacao(value);
 
+    const hoje = new Date();
+    const mesAtual = hoje.toISOString().slice(0, 7);
+
     if (value === 'area') {
-      const hoje = new Date();
-      const mesAno = hoje.toISOString().slice(0, 7); // yyyy-MM
-      setDataInicio(mesAno);
-      setDataFim(mesAno);
+      setDataInicio(mesAtual);
+      setDataFim(mesAtual);
     } else {
-      const hoje = new Date();
       const inicio = new Date();
       inicio.setDate(hoje.getDate() - 30);
       setDataInicio(inicio.toISOString().split('T')[0]);
@@ -100,6 +92,12 @@ export const Filtros: React.FC<Props> = ({ onFiltrar }) => {
             type="month"
             value={dataInicio}
             onChange={e => setDataInicio(e.target.value)}
+            className="filtro-input"
+          />
+          <input
+            type="month"
+            value={dataFim}
+            onChange={e => setDataFim(e.target.value)}
             className="filtro-input"
           />
         </>

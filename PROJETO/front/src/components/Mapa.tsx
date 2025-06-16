@@ -151,9 +151,9 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
   }, []);
 
   useEffect(() => {
-    if (filtros.tipoVisualizacao === 'area' && filtros.dataInicio) {
-      const mesAno = filtros.dataInicio; // já vem no formato yyyy-MM
-      fetch(`http://localhost:3001/api/area-queimada?mesAno=${mesAno}`)
+    if (filtros.tipoVisualizacao === 'area' && filtros.dataInicio && filtros.dataFim) {
+      const url = `http://localhost:3001/api/area-queimada?mesInicio=${filtros.dataInicio}&mesFim=${filtros.dataFim}`;
+      fetch(url)
         .then(res => res.json())
         .then(setAreaQueimada)
         .catch(() => setAreaQueimada(null));
@@ -231,56 +231,12 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           geoJsonBrasil={geoJsonBrasil}
         />
 
-        {geoJsonEstado && (
-          <GeoJSON
-            data={geoJsonEstado}
-            style={() => ({
-              color: 'black',
-              weight: 2,
-              fillOpacity: 0,
-            })}
-          />
-        )}
-
-        {geoJsonBioma && (
-          <GeoJSON
-            data={geoJsonBioma}
-            style={() => ({
-              color: 'green',
-              weight: 2,
-              fillOpacity: 0.2,
-            })}
-          />
-        )}
-
-        {!geoJsonEstado && !geoJsonBioma && geoJsonBrasil && (
-          <GeoJSON
-            data={geoJsonBrasil}
-            style={() => ({
-              color: 'black',
-              weight: 2,
-              fillOpacity: 0,
-            })}
-          />
-        )}
-
-        {filtros.tipoVisualizacao === 'area' && areaQueimada && (
-          <GeoJSON
-            data={areaQueimada}
-            style={() => ({
-              color: 'red',
-              weight: 1,
-              fillOpacity: 0.4,
-            })}
-          />
-        )}
-
+        {geoJsonEstado && <GeoJSON data={geoJsonEstado} style={() => ({ color: 'black', weight: 2, fillOpacity: 0 })} />}
+        {geoJsonBioma && <GeoJSON data={geoJsonBioma} style={() => ({ color: 'green', weight: 2, fillOpacity: 0.2 })} />}
+        {!geoJsonEstado && !geoJsonBioma && geoJsonBrasil && <GeoJSON data={geoJsonBrasil} style={() => ({ color: 'black', weight: 2, fillOpacity: 0 })} />}
+        {filtros.tipoVisualizacao === 'area' && areaQueimada && <GeoJSON data={areaQueimada} style={() => ({ color: 'red', weight: 1, fillOpacity: 0.4 })} />}
         {pontos.map((ponto, idx) => (
-          <Marker
-            key={idx}
-            position={[ponto.Latitude, ponto.Longitude]}
-            icon={getFrpIcon(ponto.FRP)}
-          >
+          <Marker key={idx} position={[ponto.Latitude, ponto.Longitude]} icon={getFrpIcon(ponto.FRP)}>
             <Popup>
               <div>
                 <strong>Município:</strong> {ponto.Municipio}<br />
