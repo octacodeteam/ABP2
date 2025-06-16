@@ -42,7 +42,10 @@
   
 
 ## 🔗 Resultados :
+Focos de Calor
 ![image](https://github.com/user-attachments/assets/b26f694c-d65b-48e6-b08f-8ac657e94291)
+Área Queimada
+![image](https://github.com/user-attachments/assets/f0a4382d-1322-4dc4-9a4b-bd6afce3165e)
 
 
 ## Diagrama de Sequência
