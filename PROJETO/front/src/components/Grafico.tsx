@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
 import './style/Grafico.css';
 
+interface CidadeFRP {
+  Municipio: string;
+  Estado: string;
+  media_frp: number;
+  media_dias: number;
+}
+
 interface Queimada {
   Estado: string;
   Bioma: string;
@@ -20,7 +27,7 @@ interface EstadoAgrupado {
 
 export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string, dataInicio: string, dataFim: string } }) => {
   const [graficoDados, setGraficoDados] = useState<(string | number)[][]>([]);
-  const [frpDados, setFrpDados] = useState<(string | number)[][]>([]);
+  const [frpCidadesDados, setFrpCidadesDados] = useState<any[][]>([]);
   const [listagem, setListagem] = useState<EstadoAgrupado[]>([]);
 
   useEffect(() => {
@@ -31,68 +38,65 @@ export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string,
     if (filtros.estado !== 'todos') params.append('estado', filtros.estado);
     if (filtros.bioma !== 'todos') params.append('bioma', filtros.bioma);
 
-    const url = `http://localhost:3001/api/queimadas?${params.toString()}`;
-    fetch(url)
-      .then(res => res.json())
-      .then((data: Queimada[]) => {
-        const totalPorEstado: Record<string, number> = {};
-        const frpPorEstado: Record<string, number[]> = {};
-        const agrupamento: Record<string, { frps: number[]; dias: number[] }> = {};
+    const urlQueimadas = `http://localhost:3001/api/queimadas?${params.toString()}`;
+    const urlTopCidades = `http://localhost:3001/api/top-cidades-frp?${params.toString()}`;
 
-        data.forEach(q => {
+    Promise.all([
+      fetch(urlQueimadas).then(res => res.json()),
+      fetch(urlTopCidades).then(res => res.json())
+    ])
+      .then(([dataQueimadas, dataTopCidades]: [Queimada[], CidadeFRP[]]) => {
+        const totalPorEstado: Record<string, number> = {};
+        const estadosMap: Record<string, EstadoAgrupado> = {};
+
+        const frpFormatado: any[][] = [['Cidade', 'FRP Médio', { role: 'tooltip', type: 'string', p: { html: true } }]];
+        dataTopCidades.forEach(cidade => {
+          const frpLabel = cidade.media_frp < 0 ? "Sem dados coletados" : `${cidade.media_frp.toFixed(2)}`;
+          const diasLabel = cidade.media_dias < 0 ? "Sem dados coletados" : `${cidade.media_dias.toFixed(2)}`;
+
+          const tooltip = `
+            <div style="padding:10px">
+              <strong>${cidade.Municipio} - ${cidade.Estado}</strong><br/>
+              FRP Médio: <b>${frpLabel}</b><br/>
+              Dias sem chuva: <b>${diasLabel}</b>
+            </div>
+          `;
+          frpFormatado.push([
+            cidade.Municipio,
+            cidade.media_frp < 0 ? 0 : +cidade.media_frp.toFixed(2),
+            tooltip
+          ]);
+        });
+
+        dataQueimadas.forEach(q => {
           totalPorEstado[q.Estado] = (totalPorEstado[q.Estado] || 0) + 1;
-          if (!frpPorEstado[q.Estado]) frpPorEstado[q.Estado] = [];
-          frpPorEstado[q.Estado].push(q.FRP);
 
           const chave = `${q.Estado}-${q.Bioma}`;
-          if (!agrupamento[chave]) agrupamento[chave] = { frps: [], dias: [] };
-          agrupamento[chave].frps.push(q.FRP);
-          agrupamento[chave].dias.push(q.DiaSemChuva);
+          if (!estadosMap[q.Estado]) estadosMap[q.Estado] = { Estado: q.Estado, Biomas: [] };
+
+          const biomaIndex = estadosMap[q.Estado].Biomas.findIndex(b => b.Bioma === q.Bioma);
+          if (biomaIndex === -1) {
+            estadosMap[q.Estado].Biomas.push({
+              Bioma: q.Bioma,
+              mediaFRP: q.FRP,
+              mediaDiasSemChuva: q.DiaSemChuva
+            });
+          }
         });
 
         const graficoFormatado: (string | number)[][] = [['Estado', 'Total de Queimadas']];
-        const frpFormatado: (string | number)[][] = [['Estado', 'FRP Médio']];
-        const estadosMap: Record<string, EstadoAgrupado> = {};
-
         for (const estado in totalPorEstado) {
-          // Filtra apenas FRPs positivos
-          const frps = frpPorEstado[estado].filter(frp => frp > 0);
-          const mediaFRP = frps.length > 0 ? frps.reduce((a, b) => a + b, 0) / frps.length : 0;
           graficoFormatado.push([estado, totalPorEstado[estado]]);
-          frpFormatado.push([estado, +mediaFRP.toFixed(2)]);
         }
-
-        for (const chave in agrupamento) {
-          const [estado, bioma] = chave.split('-');
-          const grupo = agrupamento[chave];
-          // Filtra apenas valores positivos
-          const frpsPositivos = grupo.frps.filter(frp => frp > 0);
-          const diasPositivos = grupo.dias.filter(dia => dia > 0);
-
-          const mediaFRP = frpsPositivos.length > 0 ? frpsPositivos.reduce((a, b) => a + b, 0) / frpsPositivos.length : 0;
-          const mediaDias = diasPositivos.length > 0 ? diasPositivos.reduce((a, b) => a + b, 0) / diasPositivos.length : 0;
-
-          if (!estadosMap[estado]) {
-            estadosMap[estado] = { Estado: estado, Biomas: [] };
-          }
-
-          estadosMap[estado].Biomas.push({
-            Bioma: bioma,
-            mediaFRP: +mediaFRP.toFixed(2),
-            mediaDiasSemChuva: +mediaDias.toFixed(2)
-          });
-        }
-
-        const listagemFinal = Object.values(estadosMap);
 
         setGraficoDados(graficoFormatado);
-        setFrpDados(frpFormatado);
-        setListagem(listagemFinal);
+        setFrpCidadesDados(frpFormatado);
+        setListagem(Object.values(estadosMap));
       })
       .catch(err => {
         console.error('Erro ao buscar dados:', err);
         setGraficoDados([]);
-        setFrpDados([]);
+        setFrpCidadesDados([]);
         setListagem([]);
       });
   }, [filtros]);
@@ -101,7 +105,7 @@ export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string,
     <div className="dashboard-container">
       <div className="chart-row">
         <div className="chart-box">
-          <h3>Total de Queimadas</h3>
+          <h3>Total de Queimadas por Estado</h3>
           <Chart
             chartType="ColumnChart"
             width="100%"
@@ -116,17 +120,18 @@ export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string,
           />
         </div>
         <div className="chart-box">
-          <h3>FRP Médio por Estado</h3>
+          <h3>Top 10 Cidades com Maior FRP</h3>
           <Chart
             chartType="ColumnChart"
             width="100%"
             height="300px"
-            data={frpDados}
+            data={frpCidadesDados}
             options={{
               legend: { position: "none" },
-              hAxis: { title: "Estado" },
+              hAxis: { title: "Cidade" },
               vAxis: { title: "FRP Médio" },
-              colors: ['#1a9850']
+              colors: ['#1a9850'],
+              tooltip: { isHtml: true }
             }}
           />
         </div>
@@ -145,8 +150,13 @@ export const Grafico = ({ filtros }: { filtros: { estado: string, bioma: string,
           <tbody>
             {listagem.map((estado, idx) => {
               const biomas = estado.Biomas.map(b => b.Bioma).join("\n");
-              const frps = estado.Biomas.map(b => b.mediaFRP).join("\n");
-              const dias = estado.Biomas.map(b => b.mediaDiasSemChuva).join("\n");
+              const frps = estado.Biomas.map(b =>
+                b.mediaFRP < 0 ? "Sem dados coletados" : b.mediaFRP.toFixed(2)
+              ).join("\n");
+              const dias = estado.Biomas.map(b =>
+                b.mediaDiasSemChuva < 0 ? "Sem dados coletados" : b.mediaDiasSemChuva.toFixed(2)
+              ).join("\n");
+
               return (
                 <tr key={idx}>
                   <td>{estado.Estado}</td>

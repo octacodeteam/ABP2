@@ -25,13 +25,50 @@ routes.get('/api/queimadas', async (req, res) => {
       query += ` AND "DataHora" BETWEEN $${params.length - 1} AND $${params.length}`;
     }
 
-    console.log('Query:', query);
-    console.log('Params:', params);
-
     const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error('Erro na query /api/queimadas:', error);
+    res.status(500).json({ error: 'Erro ao buscar dados' });
+  }
+});
+
+routes.get('/api/top-cidades-frp', async (req, res) => {
+  const { estado, bioma, dataInicio, dataFim } = req.query;
+
+  try {
+    let query = `
+      SELECT "Municipio", "Estado", AVG("FRP") as media_frp, AVG("DiaSemChuva") as media_dias
+      FROM queimadas
+      WHERE 1=1
+    `;
+    const params: any[] = [];
+
+    if (estado && estado !== 'todos') {
+      params.push(estado);
+      query += ` AND "Estado" = $${params.length}`;
+    }
+
+    if (bioma && bioma !== 'todos') {
+      params.push(bioma);
+      query += ` AND "Bioma" = $${params.length}`;
+    }
+
+    if (dataInicio && dataFim) {
+      params.push(dataInicio, dataFim);
+      query += ` AND "DataHora" BETWEEN $${params.length - 1} AND $${params.length}`;
+    }
+
+    query += `
+      GROUP BY "Municipio", "Estado"
+      ORDER BY media_frp DESC
+      LIMIT 10
+    `;
+
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Erro ao buscar top cidades por FRP:', err);
     res.status(500).json({ error: 'Erro ao buscar dados' });
   }
 });
