@@ -42,6 +42,8 @@
   
 
 ## 🔗 Resultados :
+![image](https://github.com/user-attachments/assets/b26f694c-d65b-48e6-b08f-8ac657e94291)
+
 
 ## Diagrama de Sequência
 ![image](https://github.com/user-attachments/assets/0755e091-be38-4db9-b8d8-01aca9627030)
