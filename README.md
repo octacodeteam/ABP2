@@ -1,6 +1,6 @@
 <h1 align="center"> 🔥 Sprint 3 - Queimadas em foco 🔥 </h1>
 
-**Início: 16/05 - Fim: 11/06**
+**Início: 16/05 - Fim: 15/06**
 
 **Status do Projeto: Concluído✅**
 
