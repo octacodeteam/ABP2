@@ -26,7 +26,7 @@ Nesta segunda sprint, focamos na consolidação da base técnica do sistema, inc
 
 ## 📉Burndown
 
-<img width="513" alt="image" src="">
+<img width="640" alt="image" src="https://github.com/user-attachments/assets/79596ce0-1571-4c05-8a81-13210d3e13e0">
 
 
 </br>
