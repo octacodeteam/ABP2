@@ -28,7 +28,7 @@
 
 ## 📉Burndown
 
-<img width="513" alt="image" src="">
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/eba3907b-39b3-4cd0-bfa6-e6bcc5833ca2">
 
 
 </br>
@@ -44,6 +44,8 @@
 ## 🔗 Resultados :
 Focos de Calor
 ![image](https://github.com/user-attachments/assets/b26f694c-d65b-48e6-b08f-8ac657e94291)
+Risco de Fogo
+![image](https://github.com/user-attachments/assets/5ab99694-de08-4de0-83cb-07b94712fffe)
 Área Queimada
 ![image](https://github.com/user-attachments/assets/f0a4382d-1322-4dc4-9a4b-bd6afce3165e)
 
