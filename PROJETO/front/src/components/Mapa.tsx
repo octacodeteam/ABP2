@@ -25,6 +25,26 @@ const FrpLegend = () => {
   );
 };
 
+const RiscoFogoLegend = () => {
+  const legendItems = [
+    { color: "#FFFFFF", label: "0 (Sem risco)" },
+    { color: "#808080", label: "1 (Alto risco)" }
+  ];
+
+  return (
+    <div className="frp-legend">
+      <h4>Risco de Fogo</h4>
+      {legendItems.map((item, index) => (
+        <div key={index} className="frp-legend-item">
+          <div className="frp-dot" style={{ backgroundColor: item.color }} />
+          <span>{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+
 function AjustaVisualizacao({
   geoJsonEstado,
   geoJsonBioma,
@@ -230,7 +250,8 @@ export const Mapa = ({ filtros }: { filtros: { estado: string, bioma: string, da
           </Marker>
         ))}
       </MapContainer>
-      <FrpLegend />
+      {filtros.tipoVisualizacao === 'focos' && <FrpLegend />}
+      {filtros.tipoVisualizacao === 'risco' && <RiscoFogoLegend />}
     </div>
   );
 };
