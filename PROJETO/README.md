@@ -1,8 +1,8 @@
 # Queimadas em Foco
 
-<p align="center"\>
-<img src="[https://github.com/user-attachments/assets/da2c22a6-1fee-4c20-8ffc-9aa337d1a9ea](https://github.com/user-attachments/assets/da2c22a6-1fee-4c20-8ffc-9aa337d1a9ea)" alt="gifgithubatualizado"\>
-</p\>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da2c22a6-1fee-4c20-8ffc-9aa337d1a9ea" alt="gifgithubatualizado">
+</p>
 
 ## 📌 Objetivo do Projeto
 
@@ -83,7 +83,6 @@ Antes de começar, você precisará ter as seguintes ferramentas instaladas em s
   * [Node.js](https://nodejs.org/en/) (que já vem com o npm)
   * [PostgreSQL](https://www.postgresql.org/download/)
 
-````markdown
 ## 📦 Instalação
 
 Siga os passos abaixo para instalar e executar o projeto em sua máquina local.
@@ -113,21 +112,20 @@ cd PROJETO
 
     Você precisará informar a senha do seu usuário `postgres` para continuar.
 
-    \<details\>
-    \<summary\>\<strong\>👉 Problemas com o comando `psql`? (Clique para ver como configurar)\</strong\>\</summary\>
+    <details><summary><strong>👉 Problemas com o comando psql? (Clique para ver como configurar)</strong></summary>
 
     Se o seu terminal não reconhecer o comando `psql`, significa que a pasta `bin` do PostgreSQL não está nas variáveis de ambiente do seu sistema. Siga os passos abaixo para resolver:
 
     1.  **Encontre a pasta `bin`:** O caminho geralmente é `C:\Program Files\PostgreSQL\<SUA_VERSÃO>\bin`. Confirme a versão instalada na sua máquina.
     2.  **Copie o caminho completo** dessa pasta.
     3.  **Adicione ao PATH do sistema:**
-          * Pesquise por "Editar as variáveis de ambiente do sistema" no menu Iniciar.
-          * Clique em "Variáveis de Ambiente...".
-          * Na seção "Variáveis do sistema", selecione a variável `Path` e clique em "Editar...".
-          * Clique em "Novo", cole o caminho que você copiou e clique em "OK" em todas as janelas para salvar.
+        * Pesquise por "Editar as variáveis de ambiente do sistema" no menu Iniciar.
+        * Clique em "Variáveis de Ambiente...".
+        * Na seção "Variáveis do sistema", selecione a variável `Path` e clique em "Editar...".
+        * Clique em "Novo", cole o caminho que você copiou e clique em "OK" em todas as janelas para salvar.
     4.  **Reinicie o seu terminal** e tente executar o comando `psql` novamente.
 
-    \</details\>
+    </details>
 
 ### 3\. Configuração do Backend
 
