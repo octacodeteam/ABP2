@@ -24,7 +24,7 @@
 > [!IMPORTANT]
 > O objetivo é desenvolver uma aplicação web que permita aos usuários consultar e visualizar de forma interativa os dados de área queimada, risco de fogo e focos de color obtidos na base de dados do BDQueimadas.
 
-> **Status do Projeto: Em Andamento🔜**
+> **Status do Projeto: Concluído✅**
 
 <span id="sprints">
 
